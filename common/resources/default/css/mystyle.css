@@ -1,7 +1,7 @@
 /* This is the last CSS loaded - you can destroy incoming formatting! */
 
 /* Replace the icon near the title. */ 
-/* Fix line spacing of headers. */ 
+/* Fix line spacing of headers. */
 /* CC-1424 Allow wrapping of extremely long words. NB: did test with
    overflow-wrap, but it didn't work (Firefox Mac 41: why?), so used the
    old-style word-wrap instead. */
