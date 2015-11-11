@@ -2,9 +2,13 @@
 
 /* Replace the icon near the title. */ 
 /* Fix line spacing of headers. */ 
+/* CC-1424 Allow wrapping of extremely long words. NB: did test with
+   overflow-wrap, but it didn't work (Firefox Mac 41: why?), so used the
+   old-style word-wrap instead. */
 header h1 {
     background: url("../images/molecule.png") no-repeat scroll 0 0 transparent;
     line-height: 1em;
+    word-wrap: break-word;
 }
 
 /* ANDS RVA Banner. */
