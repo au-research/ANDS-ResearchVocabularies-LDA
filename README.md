@@ -22,3 +22,9 @@ Directory structure:
 * source:
   source for a customization, where that source is not otherwise
   to be copied into the installation
+
+Some configuration files of particular interest:
+
+* servers/vocabs/resources/default/config/*.ttl:
+  The LDA spec files for ANDS-curated vocabularies
+  (RIF-CS, ANZSRC-FOR/SEO, GCMD).
