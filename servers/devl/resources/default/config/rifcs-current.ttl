@@ -1,8 +1,8 @@
 # Curated version of SISSVoc spec template.
 
-# This gives endpoints with "/rifcs".
+# Current version of RIF-CS.
+# This gives endpoints with "/rifcs-current".
 
-# Currently points to RIF-CS 1.6.
 # To change this, change the api:sparqlEndpoint setting below.
 
 
@@ -128,8 +128,8 @@ svoc:rifcs a api:API
 		[api:name "SISSDefaultResourceDirBase"; api:value "{webapp}/resources/default/"]
 		, [api:name "myResourceDirBase"; api:value "{webapp}/resources/default/"]
 		, [api:name "_resourceRoot"; api:value "{webapp}/lda-assets/"]
-		, [api:name "resourcePath"; api:value "{webapp}/rifcs/resource"]
-		, [api:name "resourceEndPoint"; api:value "{webapp}/rifcs/resource"]
+		, [api:name "resourcePath"; api:value "{webapp}/rifcs-current/resource"]
+		, [api:name "resourceEndPoint"; api:value "{webapp}/rifcs-current/resource"]
 		, [api:name "serviceTitle"; api:value "ANDS Vocabularies LDA service"]
 		, [api:name "serviceAuthor"; api:value "ANDS Services"]
 		, [api:name "serviceAuthorEmail"; api:value "services@ands.org.au"]
@@ -140,7 +140,7 @@ svoc:rifcs a api:API
                 # The variables were called _vocabName, etc. but have now been
                 # renamed to _ANDS_vocabName, etc. to show clearly that they
                 # are ANDS customizations.
-                , [api:name "_ANDS_vocabName"; api:value "Registry Interchange Format - Collections and Services (RIFCS) v1.6 Vocabulary Service"]
+                , [api:name "_ANDS_vocabName"; api:value "Registry Interchange Format - Collections and Services (RIFCS) Vocabulary Service"]
                 , [api:name "_ANDS_vocabMore"; api:value ""]
                 , [api:name "_ANDS_vocabAPIDoco"; api:value ""]
                 # ANDS-specific configuration
@@ -161,7 +161,7 @@ svoc:rifcs a api:API
 
 ## Set title of service. This shows up in the /api-config view.
 
-	; rdfs:label "Registry Interchange Format - Collections and Services (RIFCS) v1.6 Vocabulary Service"@en
+	; rdfs:label "Registry Interchange Format - Collections and Services (RIFCS) Vocabulary Service"@en
 
 # document the provenance of this vocabulary with links to the source
 
@@ -170,7 +170,7 @@ svoc:rifcs a api:API
 
 # set the SPARQL endpoint
 
-	; api:sparqlEndpoint <http://vocabs.ands.org.au/repository/api/sparql/rifcs16>
+	; api:sparqlEndpoint <http://vocabs.ands.org.au/repository/api/sparql/rifcs-current>
 	.
 
 ## end of TODO:
@@ -184,7 +184,7 @@ svoc:rifcs a api:API
 
 # ANDS: elda now requires SPARQL 1.1 and emits a warning if you _include_ this!
 
-## <http://vocabs.ands.org.au/repository/api/sparql/rifcs16> elda:supportsNestedSelect true .
+## <http://vocabs.ands.org.au/repository/api/sparql/rifcs-current> elda:supportsNestedSelect true .
 
 ## end of TODO:
 ##############################################################
@@ -291,8 +291,8 @@ svoc:URIEndpoint a api:ItemEndpoint
 ## change "test" to vocab name
 ## set value of uri= to a URI from the vocabulary
 
-		; api:uriTemplate  "/rifcs/resource?uri={URI}"
-		; api:exampleRequestPath  "/rifcs/resource?uri=http://resource.geosciml.org/classifier/ics/ischart/Furongian"
+		; api:uriTemplate  "/rifcs-current/resource?uri={URI}"
+		; api:exampleRequestPath  "/rifcs-current/resource?uri=http://resource.geosciml.org/classifier/ics/ischart/Furongian"
 
 ## end of TODO:
 ##############################################################
@@ -313,8 +313,8 @@ svoc:conceptSchemeEndpoint a api:ListEndpoint
 ## TODO: deployer to make changes here
 ## change "test" to vocab name
 
-		; api:uriTemplate  "/rifcs/conceptscheme"
-		; api:exampleRequestPath  "/rifcs/conceptscheme"
+		; api:uriTemplate  "/rifcs-current/conceptscheme"
+		; api:exampleRequestPath  "/rifcs-current/conceptscheme"
 
 ## end of TODO:
 ##############################################################
@@ -331,8 +331,8 @@ svoc:conceptCollectionEndpoint a api:ListEndpoint
 ## TODO: deployer to make changes here
 ## change "test" to vocab name
 
-		; api:uriTemplate  "/rifcs/collection"
-		; api:exampleRequestPath  "/rifcs/collection"
+		; api:uriTemplate  "/rifcs-current/collection"
+		; api:exampleRequestPath  "/rifcs-current/collection"
 
 ## end of TODO:
 ##############################################################
@@ -352,8 +352,8 @@ svoc:conceptListEndpoint a api:ListEndpoint
 ## TODO: deployer to make changes here
 ## change "test" to vocab name
 
-		; api:uriTemplate  "/rifcs/concept"
-		; api:exampleRequestPath  "/rifcs/concept"
+		; api:uriTemplate  "/rifcs-current/concept"
+		; api:exampleRequestPath  "/rifcs-current/concept"
 
 ## end of TODO:
 ##############################################################
@@ -376,8 +376,8 @@ svoc:conceptLabelEndpoint a api:ListEndpoint
 ## change "test" to vocab name
 ## change value of anyLabel= to a label for a concept in this vocabulary
 
-		; api:uriTemplate  "/rifcs/concept?anylabel={text}"
-		; api:exampleRequestPath  "/rifcs/concept?anylabel=Cambrian"
+		; api:uriTemplate  "/rifcs-current/concept?anylabel={text}"
+		; api:exampleRequestPath  "/rifcs-current/concept?anylabel=Cambrian"
 
 ## end of TODO:
 ##############################################################
@@ -403,8 +403,8 @@ svoc:conceptLabelContainsEndpoint a api:ListEndpoint
 ## change "test" to vocab name
 ## change value of labelcontains= to a word in a label for a concept in this vocabulary
 
-		; api:uriTemplate  "/rifcs/concept?labelcontains={text}"
-		; api:exampleRequestPath  "/rifcs/concept?labelcontains=cambrian"
+		; api:uriTemplate  "/rifcs-current/concept?labelcontains={text}"
+		; api:exampleRequestPath  "/rifcs-current/concept?labelcontains=cambrian"
 
 ## end of TODO:
 ##############################################################
@@ -430,8 +430,8 @@ svoc:broaderThanURIEndpoint a api:ListEndpoint
 ## change "test" to vocab name
 ## change value of uri= to a uri for a concept in this vocabulary
 
-		; api:uriTemplate  "/rifcs/concept/broader?uri={baseConcept}"
-		; api:exampleRequestPath  "/rifcs/concept/broader?uri=http://resource.geosciml.org/classifier/ics/ischart/Cambrian"
+		; api:uriTemplate  "/rifcs-current/concept/broader?uri={baseConcept}"
+		; api:exampleRequestPath  "/rifcs-current/concept/broader?uri=http://resource.geosciml.org/classifier/ics/ischart/Cambrian"
 
 ## end of TODO:
 ##############################################################
@@ -452,8 +452,8 @@ svoc:narrowerThanURIEndpoint a api:ListEndpoint
 ## change "test" to vocab name
 ## change value of uri= to a uri for a concept in this vocabulary
 
-		; api:uriTemplate  "/rifcs/concept/narrower?uri={baseConcept}"
-		; api:exampleRequestPath  "/rifcs/concept/narrower?uri=http://resource.geosciml.org/classifier/ics/ischart/Cambrian"
+		; api:uriTemplate  "/rifcs-current/concept/narrower?uri={baseConcept}"
+		; api:exampleRequestPath  "/rifcs-current/concept/narrower?uri=http://resource.geosciml.org/classifier/ics/ischart/Cambrian"
 
 ## end of TODO:
 ##############################################################
@@ -474,8 +474,8 @@ svoc:broaderTransitiveThanURIEndpoint a api:ListEndpoint
 ## change "test" to vocab name
 ## change value of uri= to a uri for a concept in this vocabulary
 
-		; api:uriTemplate  "/rifcs/concept/broaderTransitive?uri={baseConcept}"
-		; api:exampleRequestPath  "/rifcs/concept/broaderTransitive?uri=http://resource.geosciml.org/classifier/ics/ischart/Cambrian"
+		; api:uriTemplate  "/rifcs-current/concept/broaderTransitive?uri={baseConcept}"
+		; api:exampleRequestPath  "/rifcs-current/concept/broaderTransitive?uri=http://resource.geosciml.org/classifier/ics/ischart/Cambrian"
 
 ## end of TODO:
 ##############################################################
@@ -496,8 +496,8 @@ svoc:narrowerTransitiveThanURIEndpoint a api:ListEndpoint
 ## change "test" to vocab name
 ## change value of uri= to a uri for a concept in this vocabulary
 
-		; api:uriTemplate  "/rifcs/concept/narrowerTransitive?uri={baseConcept}"
-		; api:exampleRequestPath  "/rifcs/concept/narrowerTransitive?uri=http://resource.geosciml.org/classifier/ics/ischart/Cambrian"
+		; api:uriTemplate  "/rifcs-current/concept/narrowerTransitive?uri={baseConcept}"
+		; api:exampleRequestPath  "/rifcs-current/concept/narrowerTransitive?uri=http://resource.geosciml.org/classifier/ics/ischart/Cambrian"
 
 ## end of TODO:
 ##############################################################
@@ -518,8 +518,8 @@ svoc:broaderLabelEndpoint a api:ListEndpoint
 ## change "test" to vocab name
 ## change value of anyLabel= to a label for a concept in this vocabulary
 
-		; api:uriTemplate  "/rifcs/concept/broader?anylabel={text}"
-		; api:exampleRequestPath  "/rifcs/concept/broader?anylabel=Cambrian"
+		; api:uriTemplate  "/rifcs-current/concept/broader?anylabel={text}"
+		; api:exampleRequestPath  "/rifcs-current/concept/broader?anylabel=Cambrian"
 
 ## end of TODO:
 ##############################################################
@@ -546,8 +546,8 @@ svoc:narrowerLabelEndpoint a api:ListEndpoint
 ## change "test" to vocab name
 ## change value of anyLabel= to a label for a concept in this vocabulary
 
-		; api:uriTemplate  "/rifcs/concept/narrower?anylabel={text}"
-		; api:exampleRequestPath  "/rifcs/concept/narrower?anylabel=Cambrian"
+		; api:uriTemplate  "/rifcs-current/concept/narrower?anylabel={text}"
+		; api:exampleRequestPath  "/rifcs-current/concept/narrower?anylabel=Cambrian"
 
 ## end of TODO:
 ##############################################################
@@ -574,8 +574,8 @@ svoc:broaderTransitiveLabelEndpoint a api:ListEndpoint
 ## change "test" to vocab name
 ## change value of anyLabel= to a label for a concept in this vocabulary
 
-		; api:uriTemplate  "/rifcs/concept/broaderTransitive?anylabel={text}"
-		; api:exampleRequestPath  "/rifcs/concept/broaderTransitive?anylabel=Cambrian"
+		; api:uriTemplate  "/rifcs-current/concept/broaderTransitive?anylabel={text}"
+		; api:exampleRequestPath  "/rifcs-current/concept/broaderTransitive?anylabel=Cambrian"
 
 ## end of TODO:
 ##############################################################
@@ -602,8 +602,8 @@ svoc:narrowerTransitiveLabelEndpoint a api:ListEndpoint
 ## change "test" to vocab name
 ## change value of anyLabel= to a label for a concept in this vocabulary
 
-		; api:uriTemplate  "/rifcs/concept/narrowerTransitive?anylabel={text}"
-		; api:exampleRequestPath  "/rifcs/concept/narrowerTransitive?anylabel=Cambrian"
+		; api:uriTemplate  "/rifcs-current/concept/narrowerTransitive?anylabel={text}"
+		; api:exampleRequestPath  "/rifcs-current/concept/narrowerTransitive?anylabel=Cambrian"
 
 ## end of TODO:
 ##############################################################
@@ -636,8 +636,8 @@ svoc:narrowerTransitiveLabelEndpoint a api:ListEndpoint
 # List all of the top concepts in the vocabulary.
 svoc:topConceptsEndpoint a api:ListEndpoint
                 ; rdfs:comment "List all concepts which are topConcepts of the vocabulary"
-                ; api:uriTemplate  "/rifcs/concept/topConcepts"
-                ; api:exampleRequestPath  "/rifcs/concept/topConcepts"
+                ; api:uriTemplate  "/rifcs-current/concept/topConcepts"
+                ; api:exampleRequestPath  "/rifcs-current/concept/topConcepts"
                 ; api:selector [
                                 api:where " ?item a skos:Concept . ?l skos:hasTopConcept ?item . "
                 ]
@@ -648,8 +648,8 @@ svoc:topConceptsEndpoint a api:ListEndpoint
 # List of top concepts for a specific conceptscheme.
 svoc:topConceptsByConceptSchemeEndpoint a api:ListEndpoint
                 ; rdfs:comment "List all concepts which are topConcepts of the vocabulary"
-                ; api:uriTemplate  "/rifcs/concept/topConcepts?scheme={scheme_uri}"
-                ; api:exampleRequestPath  "/rifcs/concept/topConcepts?scheme=http://resource.geosciml.org/classifier/ics/ischart/Cambrian"
+                ; api:uriTemplate  "/rifcs-current/concept/topConcepts?scheme={scheme_uri}"
+                ; api:exampleRequestPath  "/rifcs-current/concept/topConcepts?scheme=http://resource.geosciml.org/classifier/ics/ischart/Cambrian"
                 ; api:variable  [ api:name "scheme_uri"; api:type rdfs:Resource ]
                 ; api:selector [
                                 api:where " ?item a skos:Concept .  ?scheme_uri skos:hasTopConcept ?item . "
@@ -666,8 +666,8 @@ svoc:topConceptsByConceptSchemeEndpoint a api:ListEndpoint
 # (c) against the concept's IRI, case-insensitive, as long as the concep also has a skos:prefLabel.
 svoc:conceptByLabelNotationURIEndpoint a api:ListEndpoint
                  ; rdfs:comment "List concepts where an RDF label, or a SKOS label/notation, or the concept's own IRI contains this text, case-insensitive"
-                 ; api:uriTemplate  "/rifcs/concept?anycontains={text}"
-                 ; api:exampleRequestPath  "/rifcs/concept?anycontains=Cambrian"
+                 ; api:uriTemplate  "/rifcs-current/concept?anycontains={text}"
+                 ; api:exampleRequestPath  "/rifcs-current/concept?anycontains=Cambrian"
                  ; api:selector [
                                  api:where " ?item a skos:Concept .  ?item ?label ?l . FILTER (   ((?label = rdfs:label || ?label = skos:prefLabel || ?label = skos:altLabel ) && regex( str(?l) , ?text , 'i' )   )|| ((?label= skos:notation ) && str(?l) = ?text )   || ( regex( str(?item), ?text, 'i') && ( ?label = skos:prefLabel ))   ) " ## URI match, only when the URI has a prefLabel
                                 ]
@@ -678,8 +678,8 @@ svoc:conceptByLabelNotationURIEndpoint a api:ListEndpoint
 # List of concepts in the specified collection
 svoc:inCollectionURIEndpoint a api:ListEndpoint
                 ; rdfs:comment "List of concepts which are members of the collection identified by this URI"
-                ; api:uriTemplate  "/rifcs/concept/inCollection?uri={baseCollection}"
-                ; api:exampleRequestPath  "/rifcs/concept/inCollection?uri=http://resource.geosciml.org/classifier/ics/ischart/Cambrian"
+                ; api:uriTemplate  "/rifcs-current/concept/inCollection?uri={baseCollection}"
+                ; api:exampleRequestPath  "/rifcs-current/concept/inCollection?uri=http://resource.geosciml.org/classifier/ics/ischart/Cambrian"
                 ; api:variable  [ api:name "baseCollection"; api:type rdfs:Resource ]
                 ; api:selector [
                                 # counter-intuitively, skos:member property indicates the object is a member of the subject
@@ -692,8 +692,8 @@ svoc:inCollectionURIEndpoint a api:ListEndpoint
 # Recursively list of all concepts that are narrower than the one identified by this URI
 svoc:allNarrowerThanURIEndpoint a api:ListEndpoint
                 ; rdfs:comment "Recursively list concepts narrower than the one identified by this URI"
-                ; api:uriTemplate  "/rifcs/concept/allNarrower?uri={baseConcept}"
-                ; api:exampleRequestPath  "/rifcs/concept/allNarrower?uri=http://resource.geosciml.org/classifier/ics/ischart/Furongian"
+                ; api:uriTemplate  "/rifcs-current/concept/allNarrower?uri={baseConcept}"
+                ; api:exampleRequestPath  "/rifcs-current/concept/allNarrower?uri=http://resource.geosciml.org/classifier/ics/ischart/Furongian"
                 ; api:variable  [ api:name "baseConcept"; api:type rdfs:Resource ]
                 ; api:selector [ # logically unintuitive, note order of subject, object
                                 api:where " ?item skos:broader+ ?baseConcept "
