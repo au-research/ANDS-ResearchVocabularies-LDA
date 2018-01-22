@@ -17,8 +17,6 @@ Directory structure:
 * servers:
   customizations as applied to particular ANDS servers. Each
   server requiring special treatment has its own subdirectory.
-* scripts:
-  scripts to copy the customizations into place.
 * source:
   source for a customization, where that source is not otherwise
   to be copied into the installation
@@ -28,3 +26,5 @@ Some configuration files of particular interest:
 * servers/vocabs/resources/default/config/*.ttl:
   The LDA spec files for ANDS-curated vocabularies
   (RIF-CS, ANZSRC-FOR/SEO, GCMD).
+
+More details are in [ANDS-usage.md](ANDS-usage.md).
