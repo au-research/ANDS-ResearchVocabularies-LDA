@@ -43,7 +43,7 @@ contents of the generated WAR file.
 #### `common/WEB-INF/web.xml`
 
 We set `com.epimorphics.api.initialSpecFile` to
-`resources/default/config/*.ttl,/var/vocab-files/toolkit-data/specs/*.ttl`.
+`resources/default/config/*.ttl,/var/vocab-files/registry-data/specs/*.ttl`.
 
 The former directory contains the "hard-coded" spec files for the
 "curated" vocabularies; the latter directory is where RVA puts each

@@ -27,7 +27,7 @@
 
     <context-param>
        <param-name>com.epimorphics.api.initialSpecFile</param-name>
-        <param-value>resources/default/config/*.ttl,/var/vocab-files/toolkit-data/specs/*.ttl</param-value>
+        <param-value>resources/default/config/*.ttl,/var/vocab-files/registry-data/specs/*.ttl</param-value>
     </context-param>
 
   <!-- ==================================================================== -->
