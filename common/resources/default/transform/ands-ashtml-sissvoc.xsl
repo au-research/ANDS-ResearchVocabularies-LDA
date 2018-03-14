@@ -372,5 +372,44 @@
     </xsl:choose>
   </xsl:template>
 
+  <!-- Patch 6 -->
+  <!-- Fix display of format labels. The link "html"
+       did not appear properly, and caused wrapping. -->
+  <xsl:template match="hasFormat/item" mode="nav">
+    <xsl:variable name="name">
+      <xsl:choose>
+        <xsl:when test="format">
+          <xsl:apply-templates select="." mode="name" />
+        </xsl:when>
+        <!-- pick the (misplaced) label up from the result if there is one there -->
+<!--            <xsl:when test="/result/label"> -->
+<!--               <xsl:apply-templates select="/result" mode="name" /> -->
+<!--            </xsl:when> -->
+           <!-- pick up best label from misplaced result - cann only happen for html-->
+           <xsl:otherwise>
+             <xsl:text>html</xsl:text>
+<!--               <xsl:apply-templates select="/result" mode="name" /> -->
+           </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+
+    <xsl:choose>
+      <xsl:when test="format">
+        <a href="{@href}" type="{format/label}" rel="alternate"
+           title="view in {$name} format">
+          <xsl:value-of select="label" />
+        </a>
+      </xsl:when>
+      <xsl:when test="/result/format/label and /result/label">
+        <a href="{@href}" type="{/result/format/label}" rel="alternate"
+           title="view in {$name} format">
+<!--                <xsl:value-of select="/result/label" /> -->
+          <xsl:value-of select="$name" />
+        </a>
+      </xsl:when>
+    </xsl:choose>
+  </xsl:template>
+
+
 
 </xsl:stylesheet>
