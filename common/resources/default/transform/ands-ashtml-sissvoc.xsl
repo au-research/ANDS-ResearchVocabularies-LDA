@@ -368,19 +368,6 @@
 	</xsl:choose>
       </xsl:when>
       <xsl:otherwise>
-	<a rel="nofollow" title="more like this">
-	  <xsl:attribute name="href">
-	    <xsl:call-template name="substituteParam">
-	      <xsl:with-param name="uri">
-		<xsl:apply-templates select="/result" mode="searchURI" />
-	      </xsl:with-param>
-	      <xsl:with-param name="param" select="$paramName" />
-	      <xsl:with-param name="value" select="$label" />
-	    </xsl:call-template>
-	  </xsl:attribute>
-	  <img src="{$inactiveImageBase}/Search.png"
-               alt="more like this" />
-	</a>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
