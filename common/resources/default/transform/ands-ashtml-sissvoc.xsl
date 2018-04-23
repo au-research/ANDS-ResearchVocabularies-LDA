@@ -216,6 +216,7 @@
        element like this:
        <a rel="nofollow" title="more like this">...
        (The original template has also been reformatted here.)
+       Remove "less than" and "greater than" filter links as well.
   -->
   <xsl:template match="*" mode="filter">
     <xsl:param name="paramName">
@@ -257,115 +258,6 @@
 	  </xsl:attribute>
 	  <img src="{$activeImageBase}/Back.png" alt="remove filter" />
 	</a>
-      </xsl:when>
-      <xsl:when test="$datatype = 'integer' or $datatype = 'decimal'
-                      or $datatype = 'float' or $datatype = 'int' or
-                      $datatype = 'date' or $datatype = 'dateTime' or
-                      $datatype = 'time'">
-	<xsl:variable name="min">
-	  <xsl:call-template name="paramValue">
-	    <xsl:with-param name="uri">
-	      <xsl:apply-templates select="/result" mode="searchURI" />
-	    </xsl:with-param>
-	    <xsl:with-param name="param" select="concat('min-',
-                                                 $paramName)" />
-	  </xsl:call-template>
-	</xsl:variable>
-	<xsl:variable name="max">
-	  <xsl:call-template name="paramValue">
-	    <xsl:with-param name="uri">
-	      <xsl:apply-templates select="/result" mode="searchURI" />
-	    </xsl:with-param>
-	    <xsl:with-param name="param" select="concat('max-',
-                                                 $paramName)" />
-	  </xsl:call-template>
-	</xsl:variable>
-	<xsl:choose>
-	  <xsl:when test="$max = $value">
-	    <a rel="nofollow" title="remove maximum value filter">
-	      <xsl:attribute name="href">
-		<xsl:call-template name="substituteParam">
-		  <xsl:with-param name="uri">
-		    <xsl:apply-templates select="/result" mode="searchURI" />
-		  </xsl:with-param>
-		  <xsl:with-param name="param" select="concat('max-',
-                                                       $paramName)" />
-		  <xsl:with-param name="value" select="''" />
-		</xsl:call-template>
-	      </xsl:attribute>
-	      <img src="{$activeImageBase}/Back.png"
-                   alt="remove maximum value filter" />
-	    </a>
-	  </xsl:when>
-	  <xsl:otherwise>
-	    <a rel="nofollow" title="filter to values less than {$value}">
-	      <xsl:attribute name="href">
-		<xsl:call-template name="substituteParam">
-		  <xsl:with-param name="uri">
-		    <xsl:apply-templates select="/result" mode="searchURI" />
-		  </xsl:with-param>
-		  <xsl:with-param name="param" select="concat('max-',
-                                                       $paramName)" />
-		  <xsl:with-param name="value" select="$value" />
-		</xsl:call-template>
-	      </xsl:attribute>
-	      <xsl:choose>
-		<xsl:when test="$max != ''">
-		  <img src="{$activeImageBase}/Arrow3_Left.png"
-                       alt="less than {$value}" />
-		</xsl:when>
-		<xsl:otherwise>
-		  <img src="{$inactiveImageBase}/Arrow3_Left.png"
-                       alt="less than {$value}" />
-		</xsl:otherwise>
-	      </xsl:choose>
-	    </a>
-	  </xsl:otherwise>
-	</xsl:choose>
-	<xsl:choose>
-	  <xsl:when test="$min = $value">
-	    <a rel="nofollow" title="remove minimum value filter">
-	      <xsl:attribute name="href">
-		<xsl:call-template name="substituteParam">
-		  <xsl:with-param name="uri">
-		    <xsl:apply-templates select="/result"
-                                         mode="searchURI" />
-		  </xsl:with-param>
-		  <xsl:with-param name="param" select="concat('min-',
-                                                       $paramName)" />
-		  <xsl:with-param name="value" select="''" />
-		</xsl:call-template>
-	      </xsl:attribute>
-	      <img src="{$activeImageBase}/Back.png"
-                   alt="remove minimum value filter" />
-	    </a>
-	  </xsl:when>
-	  <xsl:otherwise>
-	    <a rel="nofollow" title="more than {$value}">
-	      <xsl:attribute name="href">
-		<xsl:call-template name="substituteParam">
-		  <xsl:with-param name="uri">
-		    <xsl:apply-templates select="/result"
-                                         mode="searchURI" />
-		  </xsl:with-param>
-		  <xsl:with-param name="param" select="concat('min-',
-                                                       $paramName)" />
-		  <xsl:with-param name="value" select="$value" />
-		</xsl:call-template>
-	      </xsl:attribute>
-	      <xsl:choose>
-		<xsl:when test="$min != ''">
-		  <img src="{$activeImageBase}/Arrow3_Right.png"
-                       alt="more than {$value}" />
-		</xsl:when>
-		<xsl:otherwise>
-		  <img src="{$inactiveImageBase}/Arrow3_Right.png"
-                       alt="more than {$value}" />
-		</xsl:otherwise>
-	      </xsl:choose>
-	    </a>
-	  </xsl:otherwise>
-	</xsl:choose>
       </xsl:when>
       <xsl:otherwise>
       </xsl:otherwise>
