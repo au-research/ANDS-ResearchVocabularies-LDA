@@ -1,5 +1,6 @@
 <xsl:stylesheet version="1.0"
-	xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+	xmlns:fn="http://www.w3.org/2005/xpath-functions">
 
   <!-- This is the ANDS custom XSL transform to produce the HTML
        pages for SISSVoc. It is implemented as a set of overrides
@@ -216,7 +217,10 @@
        element like this:
        <a rel="nofollow" title="more like this">...
        (The original template has also been reformatted here.)
-       Remove "less than" and "greater than" filter links as well.
+
+       See CC-2089 for a proposed change (to do with specifying the
+       vocabulary's languages in its spec file), which, if
+       implemented, would allow restoration of these search links.
   -->
   <xsl:template match="*" mode="filter">
     <xsl:param name="paramName">
@@ -258,6 +262,115 @@
 	  </xsl:attribute>
 	  <img src="{$activeImageBase}/Back.png" alt="remove filter" />
 	</a>
+      </xsl:when>
+      <xsl:when test="$datatype = 'integer' or $datatype = 'decimal'
+                      or $datatype = 'float' or $datatype = 'int' or
+                      $datatype = 'date' or $datatype = 'dateTime' or
+                      $datatype = 'time'">
+	<xsl:variable name="min">
+	  <xsl:call-template name="paramValue">
+	    <xsl:with-param name="uri">
+	      <xsl:apply-templates select="/result" mode="searchURI" />
+	    </xsl:with-param>
+	    <xsl:with-param name="param" select="concat('min-',
+                                                 $paramName)" />
+	  </xsl:call-template>
+	</xsl:variable>
+	<xsl:variable name="max">
+	  <xsl:call-template name="paramValue">
+	    <xsl:with-param name="uri">
+	      <xsl:apply-templates select="/result" mode="searchURI" />
+	    </xsl:with-param>
+	    <xsl:with-param name="param" select="concat('max-',
+                                                 $paramName)" />
+	  </xsl:call-template>
+	</xsl:variable>
+	<xsl:choose>
+	  <xsl:when test="$max = $value">
+	    <a rel="nofollow" title="remove maximum value filter">
+	      <xsl:attribute name="href">
+		<xsl:call-template name="substituteParam">
+		  <xsl:with-param name="uri">
+		    <xsl:apply-templates select="/result" mode="searchURI" />
+		  </xsl:with-param>
+		  <xsl:with-param name="param" select="concat('max-',
+                                                       $paramName)" />
+		  <xsl:with-param name="value" select="''" />
+		</xsl:call-template>
+	      </xsl:attribute>
+	      <img src="{$activeImageBase}/Back.png"
+                   alt="remove maximum value filter" />
+	    </a>
+	  </xsl:when>
+	  <xsl:otherwise>
+	    <a rel="nofollow" title="filter to values less than {$value}">
+	      <xsl:attribute name="href">
+		<xsl:call-template name="substituteParam">
+		  <xsl:with-param name="uri">
+		    <xsl:apply-templates select="/result" mode="searchURI" />
+		  </xsl:with-param>
+		  <xsl:with-param name="param" select="concat('max-',
+                                                       $paramName)" />
+		  <xsl:with-param name="value" select="$value" />
+		</xsl:call-template>
+	      </xsl:attribute>
+	      <xsl:choose>
+		<xsl:when test="$max != ''">
+		  <img src="{$activeImageBase}/Arrow3_Left.png"
+                       alt="less than {$value}" />
+		</xsl:when>
+		<xsl:otherwise>
+		  <img src="{$inactiveImageBase}/Arrow3_Left.png"
+                       alt="less than {$value}" />
+		</xsl:otherwise>
+	      </xsl:choose>
+	    </a>
+	  </xsl:otherwise>
+	</xsl:choose>
+	<xsl:choose>
+	  <xsl:when test="$min = $value">
+	    <a rel="nofollow" title="remove minimum value filter">
+	      <xsl:attribute name="href">
+		<xsl:call-template name="substituteParam">
+		  <xsl:with-param name="uri">
+		    <xsl:apply-templates select="/result"
+                                         mode="searchURI" />
+		  </xsl:with-param>
+		  <xsl:with-param name="param" select="concat('min-',
+                                                       $paramName)" />
+		  <xsl:with-param name="value" select="''" />
+		</xsl:call-template>
+	      </xsl:attribute>
+	      <img src="{$activeImageBase}/Back.png"
+                   alt="remove minimum value filter" />
+	    </a>
+	  </xsl:when>
+	  <xsl:otherwise>
+	    <a rel="nofollow" title="more than {$value}">
+	      <xsl:attribute name="href">
+		<xsl:call-template name="substituteParam">
+		  <xsl:with-param name="uri">
+		    <xsl:apply-templates select="/result"
+                                         mode="searchURI" />
+		  </xsl:with-param>
+		  <xsl:with-param name="param" select="concat('min-',
+                                                       $paramName)" />
+		  <xsl:with-param name="value" select="$value" />
+		</xsl:call-template>
+	      </xsl:attribute>
+	      <xsl:choose>
+		<xsl:when test="$min != ''">
+		  <img src="{$activeImageBase}/Arrow3_Right.png"
+                       alt="more than {$value}" />
+		</xsl:when>
+		<xsl:otherwise>
+		  <img src="{$inactiveImageBase}/Arrow3_Right.png"
+                       alt="more than {$value}" />
+		</xsl:otherwise>
+	      </xsl:choose>
+	    </a>
+	  </xsl:otherwise>
+	</xsl:choose>
       </xsl:when>
       <xsl:otherwise>
       </xsl:otherwise>
@@ -302,6 +415,80 @@
     </xsl:choose>
   </xsl:template>
 
+  <!-- Patch 7 -->
+  <!-- The off-the-shelf searchURI template assumes that there is
+       a "top-level" list endpoint whose URL can be obtained
+       by stripping back the URL of the current page, removing
+       everything after the last slash. But that's wrong for
+       SISSVoc; for the item endpoint whose URL ends in
+       .../resource, we want to switch to the list endpoint
+       .../concept.
 
+       So, if the current URL is the _item_ endpoint .../resource,
+       replace it with the concept _list_ endpoint .../concept, and
+       remove any ?uri=... parameter.
+
+       This template is made simpler than the off-the-shelf version
+       that uses the "uriExceptLastPart" template, as we take
+       advantage of Saxon's nice fn:replace() function.
+
+       Structure of the template:
+       * switch on whether this is a _list_ endpoint.
+       * if it is a list endpoint, use the href of the first result.
+       * otherwise (it's an _item_ endpoint), start with the href, and
+         see if it contains the resourceEndPoint. If so, match on it, as
+         well as any extension (e.g., ".html" or ".json") and any
+         "uri=..." parameter. Replace the resourceEndPoint with
+         conceptSearchEndPoint, and remove any "uri=..." parameter,
+         leaving the extension and any other query parameters instact.
+  -->
+  <xsl:param name="conceptSearchEndPoint" />
+
+  <xsl:template match="result" mode="searchURI">
+    <xsl:choose>
+      <xsl:when test="items">
+        <xsl:value-of select="first/@href" />
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:variable name="searchURIoriginal" select="@href" />
+        <xsl:variable name="searchURIafterReplace">
+          <xsl:choose>
+            <xsl:when test="contains($searchURIoriginal, $resourceEndPoint)">
+              <xsl:value-of select="fn:replace($searchURIoriginal,
+                                      concat($resourceEndPoint,'(\.[a-z]+)?(\?uri=[^&amp;]+)?&amp;?'),
+                                      concat($conceptSearchEndPoint,'$1'))"/>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:value-of select="$searchURIoriginal" />
+            </xsl:otherwise>
+          </xsl:choose>
+        </xsl:variable>
+        <xsl:value-of select="$searchURIafterReplace" />
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  <!-- Patch 8 -->
+  <!-- _Don't_ use the off-the-shelf ambiguous formatting 06/06/2018,
+       but use YYYY-MM-DD.
+       _Do_ keep the pretty-printing of replacing the "T" with a space.
+       _Don't_ trim the timezone.
+  -->
+  <xsl:template match="*[@datatype = 'date' or @datatype = 'dateTime' or @datatype = 'time']" mode="display">
+    <time datetime="{.}">
+      <xsl:choose>
+        <xsl:when test="@datatype = 'date' or @datatype = 'dateTime'">
+          <xsl:value-of select="substring(., 1, 10)" />
+          <xsl:if test="@datatype = 'dateTime'">
+            <xsl:text> </xsl:text>
+            <xsl:value-of select="substring(substring-after(., 'T'), 1)" />
+          </xsl:if>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:apply-templates select="." mode="content" />
+        </xsl:otherwise>
+      </xsl:choose>
+    </time>
+  </xsl:template>
 
 </xsl:stylesheet>
