@@ -303,7 +303,7 @@
 	    </a>
 	  </xsl:when>
 	  <xsl:otherwise>
-	    <a rel="nofollow" title="filter to values less than {$value}">
+	    <a rel="nofollow" title="filter to values equal to or less than {$value}">
 	      <xsl:attribute name="href">
 		<xsl:call-template name="substituteParam">
 		  <xsl:with-param name="uri">
@@ -317,11 +317,11 @@
 	      <xsl:choose>
 		<xsl:when test="$max != ''">
 		  <img src="{$activeImageBase}/Arrow3_Left.png"
-                       alt="less than {$value}" />
+                       alt="equal to or less than {$value}" />
 		</xsl:when>
 		<xsl:otherwise>
 		  <img src="{$inactiveImageBase}/Arrow3_Left.png"
-                       alt="less than {$value}" />
+                       alt="equal to or less than {$value}" />
 		</xsl:otherwise>
 	      </xsl:choose>
 	    </a>
@@ -346,7 +346,7 @@
 	    </a>
 	  </xsl:when>
 	  <xsl:otherwise>
-	    <a rel="nofollow" title="more than {$value}">
+	    <a rel="nofollow" title="filter to values equal to or more than {$value}">
 	      <xsl:attribute name="href">
 		<xsl:call-template name="substituteParam">
 		  <xsl:with-param name="uri">
@@ -361,11 +361,11 @@
 	      <xsl:choose>
 		<xsl:when test="$min != ''">
 		  <img src="{$activeImageBase}/Arrow3_Right.png"
-                       alt="more than {$value}" />
+                       alt="equal to or more than {$value}" />
 		</xsl:when>
 		<xsl:otherwise>
 		  <img src="{$inactiveImageBase}/Arrow3_Right.png"
-                       alt="more than {$value}" />
+                       alt="equal to or more than {$value}" />
 		</xsl:otherwise>
 	      </xsl:choose>
 	    </a>
