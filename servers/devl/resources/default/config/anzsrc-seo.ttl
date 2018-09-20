@@ -85,6 +85,14 @@ svoc:anzsrc-seo a api:API
 ## end of TODO:
 ##############################################################
 
+        # ANDS override of default JSON formatter,
+        # so as to get date/time values in ISO 8601 format.
+        ; api:formatter [
+                a api:JsonFormatter
+                ; api:name "json"
+                ; api:mimeType "application/json"
+                ; elda:jsonUsesISOdate true
+        ]
 	; api:endpoint
                 # ANDS: uncomment as needed.
 		# svoc:LandingPage ,
@@ -127,6 +135,9 @@ svoc:anzsrc-seo a api:API
 		, [api:name "_resourceRoot"; api:value "{webapp}/lda-assets/"]
 		, [api:name "resourcePath"; api:value "{webapp}/anzsrc-seo/resource"]
 		, [api:name "resourceEndPoint"; api:value "{webapp}/anzsrc-seo/resource"]
+                # ANDS-specific: a list endpoint that supports filters. Used
+                # by searchURI-mode template in ands-ashtml-sissvoc.xsl.
+                , [api:name "conceptSearchEndPoint"; api:value "{webapp}/anzsrc-seo/concept"]
 		, [api:name "serviceTitle"; api:value "ANDS Vocabularies LDA service"]
 		, [api:name "serviceAuthor"; api:value "ANDS Services"]
 		, [api:name "serviceAuthorEmail"; api:value "services@ands.org.au"]
@@ -889,7 +900,7 @@ dc:title
 dcterms:created
                 api:label "dctermsCreated" ;
                 a      rdfs:Property ;
-                rdfs:range     rdfs:Literal .
+                rdfs:range     xsd:dateTime .
 
 dcterms:description
                 api:label "dctermsDescription" ;
@@ -899,7 +910,7 @@ dcterms:description
 dcterms:modified
                 api:label "dctermsModified" ;
                 a      rdfs:Property ;
-                rdfs:range     rdfs:Literal .
+                rdfs:range     xsd:dateTime .
 
 dcterms:title
                 api:label "dctermsTitle" ;
