@@ -491,4 +491,27 @@
     </time>
   </xsl:template>
 
+  <!-- Patch 9 -->
+  <!-- There is already percent-escaping of hashes in IRIs;
+       also do percent-escaping of ampersands.
+  -->
+  <xsl:template match="@href" mode="adjust-uri">
+    <xsl:variable name="p1">
+      <xsl:call-template name="string-replace-all">
+	<xsl:with-param name="text" select="." />
+	<xsl:with-param name="replace" select="string('#')" />
+	<xsl:with-param name="by" select="string('%23')" />
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:variable name="p2">
+      <xsl:call-template name="string-replace-all">
+	<xsl:with-param name="text" select="$p1" />
+	<xsl:with-param name="replace" select="string('&amp;')" />
+	<xsl:with-param name="by" select="string('%26')" />
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:variable name="adjustedHref" select="concat($resourcePath,'?uri=', $p2)"/>
+    <xsl:value-of select="$adjustedHref" />
+  </xsl:template>
+
 </xsl:stylesheet>
