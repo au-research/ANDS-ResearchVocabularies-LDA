@@ -1,4 +1,4 @@
-<xsl:stylesheet version="1.0"
+<xsl:stylesheet version="2.0"
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns:fn="http://www.w3.org/2005/xpath-functions">
 
@@ -512,6 +512,29 @@
     </xsl:variable>
     <xsl:variable name="adjustedHref" select="concat($resourcePath,'?uri=', $p2)"/>
     <xsl:value-of select="$adjustedHref" />
+  </xsl:template>
+
+  <!-- Patch 10 -->
+  <!-- Honour newlines within string data.  First, remove all leading
+       and trailing whitespace. Then, replace all newlines with br
+       elements. Code to do the latter is based on an example in: Jeni
+       Tennison, "Beginning XSLT 2.0: From Novice to Professional",
+       2005, pp. 208-209.
+       Line-break regular expression enhanced to support multiple types of
+       line ending: just CR, just LF, and CRLF.
+  -->
+  <xsl:template match="*" mode="content">
+    <xsl:variable name="trimmed">
+      <xsl:value-of select="replace(., '^\s+|\s+$', '')" />
+    </xsl:variable>
+    <xsl:analyze-string select="$trimmed" regex="\r\n|\r|\n">
+      <xsl:matching-substring>
+	<br />
+      </xsl:matching-substring>
+      <xsl:non-matching-substring>
+	<xsl:value-of select="." />
+      </xsl:non-matching-substring>
+    </xsl:analyze-string>
   </xsl:template>
 
 </xsl:stylesheet>
