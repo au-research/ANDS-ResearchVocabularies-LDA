@@ -205,9 +205,11 @@
 	</xsl:choose>
 </xsl:template>
 
+<!-- Note: as of the application of Patch 10, we no longer need to include this one here:
 <xsl:template match="*" mode="content">
 	<xsl:value-of select="." />
 </xsl:template>
+-->
 
   <!-- End of verbatim-copied templates. -->
 
@@ -522,6 +524,9 @@
        2005, pp. 208-209.
        Line-break regular expression enhanced to support multiple types of
        line ending: just CR, just LF, and CRLF.
+       NB: we previously imported the original template for this
+       match/mode combination above. (See just before the comment
+       "End of verbatim-copied templates.")
   -->
   <xsl:template match="*" mode="content">
     <xsl:variable name="trimmed">
