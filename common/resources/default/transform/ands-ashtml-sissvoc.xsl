@@ -556,7 +556,8 @@
 	  <div style="display: inline-block; vertical-align: top; margin-right: 50px; margin-bottom: 20px">
 	    <img src="{$myResourceImagesBase}/csiro-brandmark-resized.png" alt="CSIRO brandkmark" /><br />
 	    <br />
-	    SISSVoc was developed by CSIRO.<br />
+	    SISSVoc was developed by
+	    <a target="_blank" href="https://www.csiro.au/">CSIRO</a>.<br />
 	    <xsl:text>Powered by </xsl:text>
 	    <xsl:apply-templates select="wasResultOf/processor" mode="footer" />
 	    <xsl:text>an implementation of the </xsl:text>
@@ -568,7 +569,8 @@
 	    <img src="{$myResourceImagesBase}/ardc-logo-resized-70.png" alt="ARDC logo" /><br />
 	    <br />
 	    This installation is operated and maintained<br />
-	    by the Australian Research Data Commons.<br />
+	    by the
+	    <a target="_blank" href="https://ardc.edu.au">Australian Research Data Commons</a>.<br />
 	    Contact <a href="mailto:{$serviceAuthorEmail}"><xsl:value-of select="$serviceAuthor"/></a><br/>
 	  </div>
 	</div>
