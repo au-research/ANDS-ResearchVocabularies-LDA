@@ -205,9 +205,11 @@
 	</xsl:choose>
 </xsl:template>
 
+<!-- Note: as of the application of Patch 10, we no longer need to include this one here:
 <xsl:template match="*" mode="content">
 	<xsl:value-of select="." />
 </xsl:template>
+-->
 
   <!-- End of verbatim-copied templates. -->
 
@@ -522,6 +524,9 @@
        2005, pp. 208-209.
        Line-break regular expression enhanced to support multiple types of
        line ending: just CR, just LF, and CRLF.
+       NB: we previously imported the original template for this
+       match/mode combination above. (See just before the comment
+       "End of verbatim-copied templates.")
   -->
   <xsl:template match="*" mode="content">
     <xsl:variable name="trimmed">
@@ -535,6 +540,45 @@
 	<xsl:value-of select="." />
       </xsl:non-matching-substring>
     </xsl:analyze-string>
+  </xsl:template>
+
+  <!-- Patch 11 -->
+  <!-- CC-2091 CC-2609 Add CSIRO credit to footer.
+       And while we're here, add ARDC logo.
+       And while we're here, update Axialis credit to what they now
+       ask for.
+  -->
+  <xsl:template match="result" mode="footer">
+    <footer>
+      <xsl:apply-templates select="wasResultOf" mode="footer" />
+      <div class="clearfix" style="margin-top: 20px">
+	<div class="pull-right">
+	  <div style="display: inline-block; vertical-align: top; margin-right: 50px; margin-bottom: 20px">
+	    <img src="{$myResourceImagesBase}/csiro-brandmark-resized.png" alt="CSIRO brandkmark" /><br />
+	    <br />
+	    SISSVoc was developed by
+	    <a target="_blank" href="https://www.csiro.au/">CSIRO</a>.<br />
+	    <xsl:text>Powered by </xsl:text>
+	    <xsl:apply-templates select="wasResultOf/processor" mode="footer" />
+	    <xsl:text>an implementation of the </xsl:text>
+	    <a href="http://code.google.com/p/linked-data-api">Linked Data API</a>.<br />
+	    <a href="http://www.axialis.com/free/icons/">Icons</a> by <a href="http://www.axialis.com">Axialis</a>.<br />
+	    <span id="rewrite_onsite">DoubleClick HERE to stay onsite</span>
+	  </div>
+	  <div style="display: inline-block; vertical-align: top; margin-right: 30px">
+	    <img src="{$myResourceImagesBase}/ardc-logo-resized-70.png" alt="ARDC logo" /><br />
+	    <br />
+	    This installation is operated and maintained<br />
+	    by the
+	    <a target="_blank" href="https://ardc.edu.au">Australian Research Data Commons</a>.<br />
+	    Contact <a href="mailto:{$serviceAuthorEmail}"><xsl:value-of select="$serviceAuthor"/></a><br/>
+	  </div>
+	</div>
+      </div>
+
+      <xsl:comment><xsl:value-of select='$configID'/></xsl:comment>
+
+    </footer>
   </xsl:template>
 
 </xsl:stylesheet>
