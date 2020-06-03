@@ -1,19 +1,19 @@
-# ANDS usage of SISSVoc
+# ARDC usage of SISSVoc
 
 ## References
 
-* Public repository of ANDS customizations:
+* Public repository of ARDC customizations:
   https://github.com/au-research/ANDS-ResearchVocabularies-LDA
 
 ## Deployments
 
 * Production: Research Vocabularies Australia (RVA)
-  https://vocabs.ands.org.au/
+  https://vocabs.ardc.edu.au/
     * Sample:
-      http://vocabs.ands.org.au/repository/api/lda/aodn/aodn-discovery-parameter-vocabulary/version-1-2/concept
-* Demo: https://demo.ands.org.au/vocabs/
+      http://vocabs.ardc.edu.au/repository/api/lda/aodn/aodn-discovery-parameter-vocabulary/version-1-2/concept
+* Demo: https://demo.vocabs.ardc.edu.au/
 
-## Explanation of ANDS customizations
+## Explanation of ARDC customizations
 
 ### How we got started
 

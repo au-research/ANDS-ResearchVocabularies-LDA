@@ -178,7 +178,7 @@ svoc:anzsrc-seo a api:API
 
 # set the SPARQL endpoint
 
-	; api:sparqlEndpoint <http://vocabs.ands.org.au/repository/api/sparql/anzsrc-seo>
+	; api:sparqlEndpoint <http://vocabs.ardc.edu.au/repository/api/sparql/anzsrc-seo>
 	.
 
 ## end of TODO:
@@ -192,7 +192,7 @@ svoc:anzsrc-seo a api:API
 
 # ARDC: elda now requires SPARQL 1.1 and emits a warning if you _include_ this!
 
-## <http://vocabs.ands.org.au/repository/api/sparql/anzsrc-seo> elda:supportsNestedSelect true .
+## <http://vocabs.ardc.edu.au/repository/api/sparql/anzsrc-seo> elda:supportsNestedSelect true .
 
 ## end of TODO:
 ##############################################################

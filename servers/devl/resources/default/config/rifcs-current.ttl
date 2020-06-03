@@ -181,7 +181,7 @@ svoc:rifcs a api:API
 
 # set the SPARQL endpoint
 
-	; api:sparqlEndpoint <http://vocabs.ands.org.au/repository/api/sparql/rifcs-current>
+	; api:sparqlEndpoint <http://vocabs.ardc.edu.au/repository/api/sparql/rifcs-current>
 	.
 
 ## end of TODO:
@@ -195,7 +195,7 @@ svoc:rifcs a api:API
 
 # ARDC: elda now requires SPARQL 1.1 and emits a warning if you _include_ this!
 
-## <http://vocabs.ands.org.au/repository/api/sparql/rifcs-current> elda:supportsNestedSelect true .
+## <http://vocabs.ardc.edu.au/repository/api/sparql/rifcs-current> elda:supportsNestedSelect true .
 
 ## end of TODO:
 ##############################################################
