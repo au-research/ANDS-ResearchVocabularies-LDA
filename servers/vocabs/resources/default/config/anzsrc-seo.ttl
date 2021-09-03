@@ -1,6 +1,6 @@
 # Curated version of SISSVoc spec template.
 
-# Version for ANZSRC-SEO.
+# Version for ANZSRC-SEO 2008.
 
 ##############################################################
 #
@@ -148,7 +148,7 @@ svoc:anzsrc-seo a api:API
                 # The variables were called _vocabName, etc. but have now been
                 # renamed to _ANDS_vocabName, etc. to show clearly that they
                 # are ARDC customizations.
-                , [api:name "_ANDS_vocabName"; api:value "ANZSRC Socio-Economic Objective Vocabulary Service (ABS 1297.0)"]
+                , [api:name "_ANDS_vocabName"; api:value "ANZSRC 2008 Socio-Economic Objective Vocabulary Service (ABS 1297.0)"]
                 , [api:name "_ANDS_vocabMore"; api:value "http://www.abs.gov.au/Ausstats/abs@.nsf/Latestproducts/1297.0Main%20Features62008?opendocument&tabname=Summary&prodno=1297.0&issue=2008&num=&view="]
                 , [api:name "_ANDS_vocabAPIDoco"; api:value ""]
                 # ARDC-specific configuration
@@ -169,7 +169,7 @@ svoc:anzsrc-seo a api:API
 
 ## Set title of service. This shows up in the /api-config view.
 
-	; rdfs:label "ANZSRC Socio-Economic Objective Vocabulary Service (ABS 1297.0)"@en
+	; rdfs:label "ANZSRC 2008 Socio-Economic Objective Vocabulary Service (ABS 1297.0)"@en
 
 # document the provenance of this vocabulary with links to the source
 

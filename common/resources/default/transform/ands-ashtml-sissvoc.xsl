@@ -29,20 +29,43 @@
 
   <!-- Patch 3 -->
   <!-- Discard the original setting of the h1 header, and use the
-       additional variables supported by Patch 1, if provided. -->
+       additional variables supported by Patch 1, if provided.
+       Move the formats to the header.
+       Note: the span.image must have _some_ content in it, otherwise
+       it "disappears" (i.e., together with the background image.
+
+       The gunk for the RVA logo is copied from the Portal, so that
+       the position of the logo exactly matches.
+  -->
   <xsl:template match="result" mode="header">
-    <nav class="site">
-      <xsl:apply-templates select="." mode="formats" />
-    </nav>
-    <header>
-      <h1><xsl:value-of select="$_ANDS_vocabName"/></h1>
-      <xsl:if test="$_ANDS_vocabMore != ''"
-              ><p><a href="{$_ANDS_vocabMore}"
-                     target="_blank"><i>(more information)</i></a></p></xsl:if>
-      <xsl:if test="$_ANDS_vocabAPIDoco != ''"
-              ><p><a href="{$_ANDS_vocabAPIDoco}"
-                     target="_blank"><i>(web service API)</i></a></p></xsl:if>
-    </header>
+
+    <div class="nav-site-container">
+      <nav class="site">
+
+	<div style="float:left">
+	  <div style="display: inline-flex">
+	    <span style="display: inline-block; height: 100%; vertical-align: middle"></span>
+	    <a style="vertical-align: middle; outline: 0" href="/">
+	      <img style="vertical-align: middle; min-width: 150px"
+		   src="{$myResourceImagesBase}/ARDC_Research_Vocabularies_RGB_FA_Master.svg"
+		   width="300px" />
+	    </a>
+	  </div>
+	</div>
+	<section class="lda-heading">
+	  <span>Linked Data API</span>
+	  <span class="image"><br /></span>
+	</section>
+      </nav>
+    </div>
+
+    <div id="page-header-border">
+      <div id="page-header">
+	<header>
+	  <h1 class="vocab-title"><xsl:value-of select="$_ANDS_vocabName"/></h1>
+	</header>
+      </div>
+    </div>
   </xsl:template>
 
   <!-- Patch 4 -->
@@ -563,15 +586,15 @@
 	    <xsl:text>an implementation of the </xsl:text>
 	    <a href="http://code.google.com/p/linked-data-api">Linked Data API</a>.<br />
 	    <a href="http://www.axialis.com/free/icons/">Icons</a> by <a href="http://www.axialis.com">Axialis</a>.<br />
-	    <span id="rewrite_onsite">DoubleClick HERE to stay onsite</span>
+	    <span id="rewrite_onsite">Double-click HERE to stay onsite.</span>
 	  </div>
 	  <div style="display: inline-block; vertical-align: top; margin-right: 30px">
-	    <img src="{$myResourceImagesBase}/ardc-logo-resized-70.png" alt="ARDC logo" /><br />
+	    <img src="{$myResourceImagesBase}/ardc_logo.svg" style="height: 70px" alt="ARDC logo" /><br />
 	    <br />
 	    This installation is operated and maintained<br />
 	    by the
 	    <a target="_blank" href="https://ardc.edu.au">Australian Research Data Commons</a>.<br />
-	    Contact <a href="mailto:{$serviceAuthorEmail}"><xsl:value-of select="$serviceAuthor"/></a><br/>
+	    Contact <a href="mailto:{$serviceAuthorEmail}"><xsl:value-of select="$serviceAuthor"/></a>.<br/>
 	  </div>
 	</div>
       </div>
@@ -579,6 +602,60 @@
       <xsl:comment><xsl:value-of select='$configID'/></xsl:comment>
 
     </footer>
+  </xsl:template>
+
+  <!-- Patch 12 -->
+  <!-- Change font. Import Roboto.
+  -->
+  <xsl:template match="result" mode="style">
+    <link href='//fonts.googleapis.com/css?family=Roboto:200,300,400,600,700,900,300italic,400italic,600italic' rel='stylesheet' type='text/css' />
+    <link rel="stylesheet" href="{$_resourceRoot}css/html5reset-1.6.1.css" type="text/css" />
+    <link rel="stylesheet" href="{$SISSDefaultResourceDirBase}css/jquery-ui.css" type="text/css" />
+    <link rel="stylesheet" href="{$_resourceRoot}css/result.css" type="text/css" />
+    <link rel="stylesheet" href="{$SISSDefaultResourceDirBase}css/sissstyle.css" type="text/css" />
+    <link rel="stylesheet" href="{$myResourceCSSResultFile}" type="text/css" />
+    <xsl:comment>
+      <xsl:text>[if lt IE 9]&gt;</xsl:text>
+      <xsl:text>&lt;link rel="stylesheet" href="</xsl:text><xsl:value-of select='$_resourceRoot'/><xsl:text>css/ie.css" type="text/css">&lt;/link></xsl:text>
+      <xsl:text>&lt;script src="http://ie7-js.googlecode.com/svn/version/2.1(beta4)/IE9.js">&lt;/script></xsl:text>
+      <xsl:text>&lt;![endif]</xsl:text>
+    </xsl:comment>
+</xsl:template>
+
+  <!-- Patch 13 -->
+  <!-- Restructure div id="page" to come after the top header.
+       Move the formats to below the vocabulary title.
+  -->
+  <xsl:template match="result">
+    <html>
+      <head>
+        <xsl:apply-templates select="." mode="title" />
+        <xsl:apply-templates select="." mode="meta" />
+        <xsl:apply-templates select="." mode="script" />
+        <xsl:apply-templates select="." mode="style" />
+      </head>
+      <body>
+        <xsl:apply-templates select="." mode="header" />
+	<div id="page-border">
+          <div id="page">
+
+	    <xsl:if test="$_ANDS_vocabMore != ''"
+		    ><p><a href="{$_ANDS_vocabMore}"
+			   target="_blank"><i>(more information)</i></a></p></xsl:if>
+	    <xsl:if test="$_ANDS_vocabAPIDoco != ''"
+		    ><p><a href="{$_ANDS_vocabAPIDoco}"
+			   target="_blank"><i>(web service API)</i></a></p></xsl:if>
+
+	    <nav class="formats">
+	      <xsl:apply-templates select="." mode="formats" />
+	    </nav>
+
+            <xsl:apply-templates select="." mode="content" />
+          </div>
+	</div>
+        <xsl:apply-templates select="." mode="footer" />
+      </body>
+    </html>
   </xsl:template>
 
 </xsl:stylesheet>
