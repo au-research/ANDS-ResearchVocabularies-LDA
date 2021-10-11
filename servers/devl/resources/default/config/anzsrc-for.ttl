@@ -1,6 +1,6 @@
 # Curated version of SISSVoc spec template.
 
-# Version for ANZSRC-FOR.
+# Version for ANZSRC-FOR 2008.
 
 ##############################################################
 #
@@ -148,7 +148,7 @@ svoc:anzsrc-for a api:API
                 # The variables were called _vocabName, etc. but have now been
                 # renamed to _ANDS_vocabName, etc. to show clearly that they
                 # are ARDC customizations.
-                , [api:name "_ANDS_vocabName"; api:value "ANZSRC Field of Research Vocabulary Service (ABS 1297.0)"]
+                , [api:name "_ANDS_vocabName"; api:value "ANZSRC 2008 Field of Research Vocabulary Service (ABS 1297.0)"]
                 , [api:name "_ANDS_vocabMore"; api:value "http://www.abs.gov.au/Ausstats/abs@.nsf/Latestproducts/1297.0Main%20Features52008"]
                 , [api:name "_ANDS_vocabAPIDoco"; api:value ""]
                 # ARDC-specific configuration
@@ -169,7 +169,7 @@ svoc:anzsrc-for a api:API
 
 ## Set title of service. This shows up in the /api-config view.
 
-	; rdfs:label "ANZSRC Field of Research Vocabulary Service (ABS 1297.0)"@en
+	; rdfs:label "ANZSRC 2008 Field of Research Vocabulary Service (ABS 1297.0)"@en
 
 # document the provenance of this vocabulary with links to the source
 
