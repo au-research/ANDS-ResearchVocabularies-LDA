@@ -658,4 +658,99 @@
     </html>
   </xsl:template>
 
+  <!-- Patch 14 -->
+  <!-- CC-2369 RVA-292 Since recent jQuery toggle() doesn't do what it
+       used to, replace its uses with a new function.  Function
+       definition sourced from
+       https://forum.jquery.com/portal/en/community/topic/beginner-function-toggle-deprecated-what-to-use-instead
+       and https://jsfiddle.net/s376u4zn/1/ .
+  -->
+  <xsl:template match="result" mode="script">
+    <script type="text/javascript" src="{$SISSDefaultResourceDirBase}js/jquery.min.js"></script>
+    <script type="text/javascript" src="{$SISSDefaultResourceDirBase}js/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="{$_resourceRoot}scripts/codemirror/codemirror_min.js"></script>
+
+    <script type="text/javascript">
+      <![CDATA[
+	$(document).ready(function() {
+	    var AlreadyRun = false;
+		$("#rewrite_onsite").dblclick(function() {
+			var hostPattern = /(^https?:\/\/[^\/]*)/
+			var url = document.URL;
+
+			if (AlreadyRun != true) {
+			    AlreadyRun = true;
+				$("a[class=outlink]").each( function(a) {
+				  var replacement = /.*[?&=#].*/.test(this.href) ? encodeURIComponent(this.href) : encodeURI(this.href);]]>
+				  this.href = this.href.replace(this.href,'<xsl:value-of select="$resourceEndPoint"/>'+"?uri="+replacement);
+				});
+				alert("OutLinks have been rewritten internal to the VOCAB!");
+			}
+			else {
+				alert("OutLinks have ALREADY been rewritten!");
+			}
+		});
+	});
+    </script>
+
+    <script type="text/javascript">
+		$(function() {
+			$.fn.toggleLegacy = function () {
+				var functions = arguments
+				return this.each(function () {
+					var iteration = 0;
+					$(this).click(function () {
+						functions[iteration].apply(this, arguments);
+						iteration = (iteration + 1) % functions.length;
+					});
+				});
+			};
+
+			$('.info img')
+				.toggleLegacy(function () {
+					$(this)
+						.attr('src', '<xsl:value-of select="$activeImageBase"/>/Cancel.png')
+						.next().show();
+				}, function () {
+					$(this)
+						.attr('src', '<xsl:value-of select="$activeImageBase"/>/Question.png')
+						.next().fadeOut('slow');
+				});
+
+			$('.provenance textarea')
+				.each(function () {
+					var skipLines = parseFloat($(this).attr('data-skip-lines'), 10);
+					var lineHeight = parseFloat($(this).css('line-height'), 10);
+					$(this).scrollTop(skipLines * lineHeight);
+					var cm = CodeMirror.fromTextArea(this, {
+						basefiles: ["<xsl:value-of select='$_resourceRoot'/>scripts/codemirror/codemirror_base_sparql.js"],
+						stylesheet: "<xsl:value-of select='$_resourceRoot'/>css/sparql.css",
+						textWrapping: false
+					});
+					$(cm.frame).load(function () {
+						cm.jumpToLine(skipLines + 1);
+						$(cm.frame)
+							.css('border', 	'1px solid #D3D3D3')
+							.css('border-radius', '5px')
+							.css('-moz-border-radius', '5px');
+					});
+				});
+		});
+    </script>
+  </xsl:template>
+  <!-- CC-2369 RVA-292 Follow-on from the previous template: now that
+       the help buttons are visible, if you click the one for "Sort
+       by", the help text is long, and can extend over the following
+       "View" box. Without this patch, together with the override in
+       mystyle.css, the question mark icon of the "View" box would
+       stick through the popup.
+  -->
+  <xsl:template name="createInfo">
+    <xsl:param name="text" />
+    <div class="info">
+      <img class="open" src="{$activeImageBase}/Question.png" alt="help" />
+      <p class="ui-tooltip"><xsl:copy-of select="$text" /></p>
+    </div>
+  </xsl:template>
+
 </xsl:stylesheet>
