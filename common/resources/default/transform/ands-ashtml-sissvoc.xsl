@@ -753,4 +753,124 @@
     </div>
   </xsl:template>
 
+  <!-- Patch 15 -->
+  <!-- CC-2368 RVA-293 Don't break the sort panel after removing one
+       of the existing sort fields.
+  -->
+  <xsl:template match="result" mode="selectedSorts">
+    <xsl:param name="uri" />
+    <xsl:param name="sorts" />
+    <xsl:param name="previousSorts" select="''" />
+    <xsl:variable name="sort" select="substring-before(concat($sorts, ','), ',')" />
+    <xsl:variable name="paramName">
+      <xsl:choose>
+	<xsl:when test="starts-with($sort, '-')">
+	  <xsl:value-of select="substring($sort, 2)" />
+	</xsl:when>
+	<xsl:otherwise>
+	  <xsl:value-of select="$sort" />
+	</xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:variable name="isLabelParam">
+      <xsl:call-template name="isLabelParam">
+	<xsl:with-param name="paramName" select="$paramName" />
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:variable name="sortsAfterComma">
+      <xsl:value-of select="substring-after($sorts, ',')" />
+    </xsl:variable>
+    <li class="selected">
+      <a rel="nofollow" title="remove this sort">
+	<xsl:attribute name="href">
+	  <xsl:call-template name="substituteParam">
+	    <xsl:with-param name="uri" select="$uri" />
+	    <xsl:with-param name="param" select="'_sort'" />
+	    <xsl:with-param name="value">
+	      <xsl:if test="$previousSorts != ''">
+		<xsl:value-of select="$previousSorts" />
+		<xsl:if test="$sortsAfterComma != ''">
+		  <xsl:text>,</xsl:text>
+		</xsl:if>
+	      </xsl:if>
+	      <xsl:value-of select="$sortsAfterComma" />
+	    </xsl:with-param>
+	  </xsl:call-template>
+	</xsl:attribute>
+	<img src="{$activeImageBase}/Cancel.png" alt="remove this sort" />
+      </a>
+      <a rel="nofollow">
+	<xsl:attribute name="href">
+	  <xsl:call-template name="substituteParam">
+	    <xsl:with-param name="uri" select="$uri" />
+	    <xsl:with-param name="param" select="'_sort'" />
+	    <xsl:with-param name="value">
+	      <xsl:if test="$previousSorts != ''">
+		<xsl:value-of select="$previousSorts" />
+		<xsl:text>,</xsl:text>
+	      </xsl:if>
+	      <xsl:choose>
+		<xsl:when test="starts-with($sort, '-')">
+		  <xsl:value-of select="substring($sort, 2)" />
+		</xsl:when>
+		<xsl:otherwise>
+		  <xsl:value-of select="concat('-', $sort)" />
+		</xsl:otherwise>
+	      </xsl:choose>
+	    </xsl:with-param>
+	  </xsl:call-template>
+	</xsl:attribute>
+	<xsl:attribute name="title">
+	  <xsl:choose>
+	    <xsl:when test="starts-with($sort, '-')">sort in ascending order</xsl:when>
+	    <xsl:otherwise>sort in descending order</xsl:otherwise>
+	  </xsl:choose>
+	</xsl:attribute>
+	<xsl:choose>
+	  <xsl:when test="starts-with($sort, '-')">
+	    <img src="{$activeImageBase}/Arrow3_Down.png" alt="sort in ascending order" />
+	  </xsl:when>
+	  <xsl:otherwise>
+	    <img src="{$activeImageBase}/Arrow3_Up.png" alt="sort in descending order" />
+	  </xsl:otherwise>
+	</xsl:choose>
+      </a>
+      <xsl:text> </xsl:text>
+      <xsl:choose>
+	<xsl:when test="$isLabelParam = 'true'">
+	  <xsl:value-of select="$paramName" />
+	</xsl:when>
+	<xsl:otherwise>
+	  <xsl:call-template name="splitPath">
+	    <xsl:with-param name="paramName" select="$paramName" />
+	  </xsl:call-template>
+	</xsl:otherwise>
+      </xsl:choose>
+    </li>
+    <xsl:if test="contains($sorts, ',')">
+      <xsl:variable name="nextPreviousSorts">
+	<xsl:choose>
+	  <xsl:when test="$previousSorts = ''">
+	    <xsl:value-of select="$sort" />
+	  </xsl:when>
+	  <xsl:otherwise>
+	    <xsl:choose>
+	      <xsl:when test="$sort = ''">
+		<xsl:value-of select="$previousSorts" />
+	      </xsl:when>
+	      <xsl:otherwise>
+		<xsl:value-of select="concat($previousSorts, ',', $sort)" />
+	      </xsl:otherwise>
+	    </xsl:choose>
+	  </xsl:otherwise>
+	</xsl:choose>
+      </xsl:variable>
+      <xsl:apply-templates select="." mode="selectedSorts">
+	<xsl:with-param name="uri" select="$uri" />
+	<xsl:with-param name="sorts" select="substring-after($sorts, ',')" />
+	<xsl:with-param name="previousSorts" select="$nextPreviousSorts" />
+      </xsl:apply-templates>
+    </xsl:if>
+  </xsl:template>
+
 </xsl:stylesheet>
