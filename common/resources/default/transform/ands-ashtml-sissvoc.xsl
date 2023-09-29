@@ -466,6 +466,13 @@
          "uri=..." parameter. Replace the resourceEndPoint with
          conceptSearchEndPoint, and remove any "uri=..." parameter,
          leaving the extension and any other query parameters instact.
+
+       For CC-2370 RVA-294, the last step has been re-implemented in
+       two steps:
+       * Replace the resourceEndPoint with conceptSearchEndPoint using
+         fn:replace.
+       * Remove any "uri=..." parameter using the substituteParam
+         template.
   -->
   <xsl:param name="conceptSearchEndPoint" />
 
@@ -479,9 +486,15 @@
         <xsl:variable name="searchURIafterReplace">
           <xsl:choose>
             <xsl:when test="contains($searchURIoriginal, $resourceEndPoint)">
-              <xsl:value-of select="fn:replace($searchURIoriginal,
-                                      concat($resourceEndPoint,'(\.[a-z]+)?(\?uri=[^&amp;]+)?&amp;?'),
-                                      concat($conceptSearchEndPoint,'$1'))"/>
+	      <xsl:call-template name="substituteParam">
+		<xsl:with-param name="uri">
+		  <xsl:value-of select="fn:replace($searchURIoriginal,
+                                        concat($resourceEndPoint,'(\.[a-z]+)?'),
+                                        concat($conceptSearchEndPoint,'$1'))" />
+		</xsl:with-param>
+		<xsl:with-param name="param" select="'uri'" />
+		<xsl:with-param name="value" select="''" />
+	      </xsl:call-template>
             </xsl:when>
             <xsl:otherwise>
               <xsl:value-of select="$searchURIoriginal" />
