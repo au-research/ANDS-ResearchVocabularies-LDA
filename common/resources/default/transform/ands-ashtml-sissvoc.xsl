@@ -465,7 +465,7 @@
          well as any extension (e.g., ".html" or ".json") and any
          "uri=..." parameter. Replace the resourceEndPoint with
          conceptSearchEndPoint, and remove any "uri=..." parameter,
-         leaving the extension and any other query parameters instact.
+         leaving the extension and any other query parameters intact.
 
        For CC-2370 RVA-294, the last step has been re-implemented in
        two steps:
