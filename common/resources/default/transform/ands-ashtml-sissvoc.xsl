@@ -465,7 +465,14 @@
          well as any extension (e.g., ".html" or ".json") and any
          "uri=..." parameter. Replace the resourceEndPoint with
          conceptSearchEndPoint, and remove any "uri=..." parameter,
-         leaving the extension and any other query parameters instact.
+         leaving the extension and any other query parameters intact.
+
+       For CC-2370 RVA-294, the last step has been re-implemented in
+       two steps:
+       * Replace the resourceEndPoint with conceptSearchEndPoint using
+         fn:replace.
+       * Remove any "uri=..." parameter using the substituteParam
+         template.
   -->
   <xsl:param name="conceptSearchEndPoint" />
 
@@ -479,9 +486,15 @@
         <xsl:variable name="searchURIafterReplace">
           <xsl:choose>
             <xsl:when test="contains($searchURIoriginal, $resourceEndPoint)">
-              <xsl:value-of select="fn:replace($searchURIoriginal,
-                                      concat($resourceEndPoint,'(\.[a-z]+)?(\?uri=[^&amp;]+)?&amp;?'),
-                                      concat($conceptSearchEndPoint,'$1'))"/>
+	      <xsl:call-template name="substituteParam">
+		<xsl:with-param name="uri">
+		  <xsl:value-of select="fn:replace($searchURIoriginal,
+                                        concat($resourceEndPoint,'(\.[a-z]+)?'),
+                                        concat($conceptSearchEndPoint,'$1'))" />
+		</xsl:with-param>
+		<xsl:with-param name="param" select="'uri'" />
+		<xsl:with-param name="value" select="''" />
+	      </xsl:call-template>
             </xsl:when>
             <xsl:otherwise>
               <xsl:value-of select="$searchURIoriginal" />
@@ -656,6 +669,221 @@
         <xsl:apply-templates select="." mode="footer" />
       </body>
     </html>
+  </xsl:template>
+
+  <!-- Patch 14 -->
+  <!-- CC-2369 RVA-292 Since recent jQuery toggle() doesn't do what it
+       used to, replace its uses with a new function.  Function
+       definition sourced from
+       https://forum.jquery.com/portal/en/community/topic/beginner-function-toggle-deprecated-what-to-use-instead
+       and https://jsfiddle.net/s376u4zn/1/ .
+  -->
+  <xsl:template match="result" mode="script">
+    <script type="text/javascript" src="{$SISSDefaultResourceDirBase}js/jquery.min.js"></script>
+    <script type="text/javascript" src="{$SISSDefaultResourceDirBase}js/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="{$_resourceRoot}scripts/codemirror/codemirror_min.js"></script>
+
+    <script type="text/javascript">
+      <![CDATA[
+	$(document).ready(function() {
+	    var AlreadyRun = false;
+		$("#rewrite_onsite").dblclick(function() {
+			var hostPattern = /(^https?:\/\/[^\/]*)/
+			var url = document.URL;
+
+			if (AlreadyRun != true) {
+			    AlreadyRun = true;
+				$("a[class=outlink]").each( function(a) {
+				  var replacement = /.*[?&=#].*/.test(this.href) ? encodeURIComponent(this.href) : encodeURI(this.href);]]>
+				  this.href = this.href.replace(this.href,'<xsl:value-of select="$resourceEndPoint"/>'+"?uri="+replacement);
+				});
+				alert("OutLinks have been rewritten internal to the VOCAB!");
+			}
+			else {
+				alert("OutLinks have ALREADY been rewritten!");
+			}
+		});
+	});
+    </script>
+
+    <script type="text/javascript">
+		$(function() {
+			$.fn.toggleLegacy = function () {
+				var functions = arguments
+				return this.each(function () {
+					var iteration = 0;
+					$(this).click(function () {
+						functions[iteration].apply(this, arguments);
+						iteration = (iteration + 1) % functions.length;
+					});
+				});
+			};
+
+			$('.info img')
+				.toggleLegacy(function () {
+					$(this)
+						.attr('src', '<xsl:value-of select="$activeImageBase"/>/Cancel.png')
+						.next().show();
+				}, function () {
+					$(this)
+						.attr('src', '<xsl:value-of select="$activeImageBase"/>/Question.png')
+						.next().fadeOut('slow');
+				});
+
+			$('.provenance textarea')
+				.each(function () {
+					var skipLines = parseFloat($(this).attr('data-skip-lines'), 10);
+					var lineHeight = parseFloat($(this).css('line-height'), 10);
+					$(this).scrollTop(skipLines * lineHeight);
+					var cm = CodeMirror.fromTextArea(this, {
+						basefiles: ["<xsl:value-of select='$_resourceRoot'/>scripts/codemirror/codemirror_base_sparql.js"],
+						stylesheet: "<xsl:value-of select='$_resourceRoot'/>css/sparql.css",
+						textWrapping: false
+					});
+					$(cm.frame).load(function () {
+						cm.jumpToLine(skipLines + 1);
+						$(cm.frame)
+							.css('border', 	'1px solid #D3D3D3')
+							.css('border-radius', '5px')
+							.css('-moz-border-radius', '5px');
+					});
+				});
+		});
+    </script>
+  </xsl:template>
+  <!-- CC-2369 RVA-292 Follow-on from the previous template: now that
+       the help buttons are visible, if you click the one for "Sort
+       by", the help text is long, and can extend over the following
+       "View" box. Without this patch, together with the override in
+       mystyle.css, the question mark icon of the "View" box would
+       stick through the popup.
+  -->
+  <xsl:template name="createInfo">
+    <xsl:param name="text" />
+    <div class="info">
+      <img class="open" src="{$activeImageBase}/Question.png" alt="help" />
+      <p class="ui-tooltip"><xsl:copy-of select="$text" /></p>
+    </div>
+  </xsl:template>
+
+  <!-- Patch 15 -->
+  <!-- CC-2368 RVA-293 Don't break the sort panel after removing one
+       of the existing sort fields.
+  -->
+  <xsl:template match="result" mode="selectedSorts">
+    <xsl:param name="uri" />
+    <xsl:param name="sorts" />
+    <xsl:param name="previousSorts" select="''" />
+    <xsl:variable name="sort" select="substring-before(concat($sorts, ','), ',')" />
+    <xsl:variable name="paramName">
+      <xsl:choose>
+	<xsl:when test="starts-with($sort, '-')">
+	  <xsl:value-of select="substring($sort, 2)" />
+	</xsl:when>
+	<xsl:otherwise>
+	  <xsl:value-of select="$sort" />
+	</xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:variable name="isLabelParam">
+      <xsl:call-template name="isLabelParam">
+	<xsl:with-param name="paramName" select="$paramName" />
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:variable name="sortsAfterComma">
+      <xsl:value-of select="substring-after($sorts, ',')" />
+    </xsl:variable>
+    <li class="selected">
+      <a rel="nofollow" title="remove this sort">
+	<xsl:attribute name="href">
+	  <xsl:call-template name="substituteParam">
+	    <xsl:with-param name="uri" select="$uri" />
+	    <xsl:with-param name="param" select="'_sort'" />
+	    <xsl:with-param name="value">
+	      <xsl:if test="$previousSorts != ''">
+		<xsl:value-of select="$previousSorts" />
+		<xsl:if test="$sortsAfterComma != ''">
+		  <xsl:text>,</xsl:text>
+		</xsl:if>
+	      </xsl:if>
+	      <xsl:value-of select="$sortsAfterComma" />
+	    </xsl:with-param>
+	  </xsl:call-template>
+	</xsl:attribute>
+	<img src="{$activeImageBase}/Cancel.png" alt="remove this sort" />
+      </a>
+      <a rel="nofollow">
+	<xsl:attribute name="href">
+	  <xsl:call-template name="substituteParam">
+	    <xsl:with-param name="uri" select="$uri" />
+	    <xsl:with-param name="param" select="'_sort'" />
+	    <xsl:with-param name="value">
+	      <xsl:if test="$previousSorts != ''">
+		<xsl:value-of select="$previousSorts" />
+		<xsl:text>,</xsl:text>
+	      </xsl:if>
+	      <xsl:choose>
+		<xsl:when test="starts-with($sort, '-')">
+		  <xsl:value-of select="substring($sort, 2)" />
+		</xsl:when>
+		<xsl:otherwise>
+		  <xsl:value-of select="concat('-', $sort)" />
+		</xsl:otherwise>
+	      </xsl:choose>
+	    </xsl:with-param>
+	  </xsl:call-template>
+	</xsl:attribute>
+	<xsl:attribute name="title">
+	  <xsl:choose>
+	    <xsl:when test="starts-with($sort, '-')">sort in ascending order</xsl:when>
+	    <xsl:otherwise>sort in descending order</xsl:otherwise>
+	  </xsl:choose>
+	</xsl:attribute>
+	<xsl:choose>
+	  <xsl:when test="starts-with($sort, '-')">
+	    <img src="{$activeImageBase}/Arrow3_Down.png" alt="sort in ascending order" />
+	  </xsl:when>
+	  <xsl:otherwise>
+	    <img src="{$activeImageBase}/Arrow3_Up.png" alt="sort in descending order" />
+	  </xsl:otherwise>
+	</xsl:choose>
+      </a>
+      <xsl:text> </xsl:text>
+      <xsl:choose>
+	<xsl:when test="$isLabelParam = 'true'">
+	  <xsl:value-of select="$paramName" />
+	</xsl:when>
+	<xsl:otherwise>
+	  <xsl:call-template name="splitPath">
+	    <xsl:with-param name="paramName" select="$paramName" />
+	  </xsl:call-template>
+	</xsl:otherwise>
+      </xsl:choose>
+    </li>
+    <xsl:if test="contains($sorts, ',')">
+      <xsl:variable name="nextPreviousSorts">
+	<xsl:choose>
+	  <xsl:when test="$previousSorts = ''">
+	    <xsl:value-of select="$sort" />
+	  </xsl:when>
+	  <xsl:otherwise>
+	    <xsl:choose>
+	      <xsl:when test="$sort = ''">
+		<xsl:value-of select="$previousSorts" />
+	      </xsl:when>
+	      <xsl:otherwise>
+		<xsl:value-of select="concat($previousSorts, ',', $sort)" />
+	      </xsl:otherwise>
+	    </xsl:choose>
+	  </xsl:otherwise>
+	</xsl:choose>
+      </xsl:variable>
+      <xsl:apply-templates select="." mode="selectedSorts">
+	<xsl:with-param name="uri" select="$uri" />
+	<xsl:with-param name="sorts" select="substring-after($sorts, ',')" />
+	<xsl:with-param name="previousSorts" select="$nextPreviousSorts" />
+      </xsl:apply-templates>
+    </xsl:if>
   </xsl:template>
 
 </xsl:stylesheet>

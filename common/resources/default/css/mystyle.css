@@ -201,3 +201,12 @@ footer a:link , footer a:visited , footer a:active , footer a:hover  {
     color: white;
     text-decoration: underline;
 }
+
+.info {
+    /* CC-2369 RVA-292 Cancel the "z-index: 5000;" setting from
+       result.css.  Together with the createInfo template override in
+       ands-ashtml-sissvoc.xsl, this ensures that the question mark
+       icon of the "View" header doesn't stick through the help popup
+       for "Sort by" when it's visible. */
+    z-index: auto;
+}

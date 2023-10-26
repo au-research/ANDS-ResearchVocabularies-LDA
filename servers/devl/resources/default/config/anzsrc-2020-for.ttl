@@ -1,6 +1,6 @@
 # Curated version of SISSVoc spec template.
 
-# Version for ANZSRC-SEO 2008.
+# Version for ANZSRC 2020 FoR.
 
 ##############################################################
 #
@@ -51,10 +51,10 @@
 ## TODO: deployer to make changes here
 ## change "test" to give this API a name to distinguish it from any other API hosted by the same LDA service
 
-svoc:anzsrc-seo a api:API
+svoc:anzsrc-2020-for a api:API
 
 ## it would be great if this could be made to help somehow, but ELDA does not currently appear to implement it
-#	; api:base "http://def.seegrid.csiro.au/sissvoc/anzsrc-seo"
+#	; api:base "http://def.seegrid.csiro.au/sissvoc/anzsrc-2020-for"
 
 ## end of TODO:
 ##############################################################
@@ -133,11 +133,11 @@ svoc:anzsrc-seo a api:API
 		[api:name "SISSDefaultResourceDirBase"; api:value "{webapp}/resources/default/"]
 		, [api:name "myResourceDirBase"; api:value "{webapp}/resources/default/"]
 		, [api:name "_resourceRoot"; api:value "{webapp}/lda-assets/"]
-		, [api:name "resourcePath"; api:value "{webapp}/anzsrc-seo/resource"]
-		, [api:name "resourceEndPoint"; api:value "{webapp}/anzsrc-seo/resource"]
+		, [api:name "resourcePath"; api:value "{webapp}/anzsrc-2020-for/resource"]
+		, [api:name "resourceEndPoint"; api:value "{webapp}/anzsrc-2020-for/resource"]
                 # ARDC-specific: a list endpoint that supports filters. Used
                 # by searchURI-mode template in ands-ashtml-sissvoc.xsl.
-                , [api:name "conceptSearchEndPoint"; api:value "{webapp}/anzsrc-seo/concept"]
+                , [api:name "conceptSearchEndPoint"; api:value "{webapp}/anzsrc-2020-for/concept"]
 		, [api:name "serviceTitle"; api:value "ARDC Vocabularies LDA service"]
 		, [api:name "serviceAuthor"; api:value "ARDC Services"]
 		, [api:name "serviceAuthorEmail"; api:value "services@ardc.edu.au"]
@@ -148,8 +148,8 @@ svoc:anzsrc-seo a api:API
                 # The variables were called _vocabName, etc. but have now been
                 # renamed to _ANDS_vocabName, etc. to show clearly that they
                 # are ARDC customizations.
-                , [api:name "_ANDS_vocabName"; api:value "ANZSRC 2008 Socio-Economic Objective Vocabulary Service (ABS 1297.0)"]
-                , [api:name "_ANDS_vocabMore"; api:value "http://www.abs.gov.au/Ausstats/abs@.nsf/Latestproducts/1297.0Main%20Features62008?opendocument&tabname=Summary&prodno=1297.0&issue=2008&num=&view="]
+                , [api:name "_ANDS_vocabName"; api:value "ANZSRC 2020 Fields of Research"]
+                , [api:name "_ANDS_vocabMore"; api:value "https://www.abs.gov.au/statistics/classifications/australian-and-new-zealand-standard-research-classification-anzsrc/2020"]
                 , [api:name "_ANDS_vocabAPIDoco"; api:value ""]
                 # ARDC-specific configuration
                 # Suppress isPrimaryTopicOf per Kim Finney request email 2015-02-25
@@ -169,7 +169,7 @@ svoc:anzsrc-seo a api:API
 
 ## Set title of service. This shows up in the /api-config view.
 
-	; rdfs:label "ANZSRC 2008 Socio-Economic Objective Vocabulary Service (ABS 1297.0)"@en
+	; rdfs:label "ANZSRC 2020 Fields of Research"@en
 
 # document the provenance of this vocabulary with links to the source
 
@@ -178,7 +178,7 @@ svoc:anzsrc-seo a api:API
 
 # set the SPARQL endpoint
 
-	; api:sparqlEndpoint <http://vocabs.ardc.edu.au/repository/api/sparql/anzsrc-seo>
+	; api:sparqlEndpoint <http://vocabs.ardc.edu.au/repository/api/sparql/anzsrc-2020-for>
 	.
 
 ## end of TODO:
@@ -192,7 +192,7 @@ svoc:anzsrc-seo a api:API
 
 # ARDC: elda now requires SPARQL 1.1 and emits a warning if you _include_ this!
 
-## <http://vocabs.ardc.edu.au/repository/api/sparql/anzsrc-seo> elda:supportsNestedSelect true .
+## <http://vocabs.ardc.edu.au/repository/api/sparql/anzsrc-2020-for> elda:supportsNestedSelect true .
 
 ## end of TODO:
 ##############################################################
@@ -282,8 +282,8 @@ andsvocabs:basicConceptSchemeViewerLabelled a api:Viewer
 
 svoc:LandingPage a api:ItemEndpoint
 		; rdfs:comment "Landing Page for this resource"
-		; api:uriTemplate  "/anzsrc-seo"
-		; api:exampleRequestPath  "/anzsrc-seo"
+		; api:uriTemplate  "/anzsrc-2020-for"
+		; api:exampleRequestPath  "/anzsrc-2020-for"
 		; api:itemTemplate  "http://resource.geosciml.org/classifierscheme/cgi/201202/faultmovementtype"
 		; api:defaultViewer  api:labelledDescribeViewer
 		; api:viewer  api:basicViewer,api:labelledDescribeViewer
@@ -299,8 +299,8 @@ svoc:URIEndpoint a api:ItemEndpoint
 ## change "test" to vocab name
 ## set value of uri= to a URI from the vocabulary
 
-		; api:uriTemplate  "/anzsrc-seo/resource?uri={URI}"
-		; api:exampleRequestPath  "/anzsrc-seo/resource?uri=http://resource.geosciml.org/classifier/ics/ischart/Furongian"
+		; api:uriTemplate  "/anzsrc-2020-for/resource?uri={URI}"
+		; api:exampleRequestPath  "/anzsrc-2020-for/resource?uri=http://resource.geosciml.org/classifier/ics/ischart/Furongian"
 
 ## end of TODO:
 ##############################################################
@@ -321,8 +321,8 @@ svoc:conceptSchemeEndpoint a api:ListEndpoint
 ## TODO: deployer to make changes here
 ## change "test" to vocab name
 
-		; api:uriTemplate  "/anzsrc-seo/conceptscheme"
-		; api:exampleRequestPath  "/anzsrc-seo/conceptscheme"
+		; api:uriTemplate  "/anzsrc-2020-for/conceptscheme"
+		; api:exampleRequestPath  "/anzsrc-2020-for/conceptscheme"
 
 ## end of TODO:
 ##############################################################
@@ -339,8 +339,8 @@ svoc:conceptCollectionEndpoint a api:ListEndpoint
 ## TODO: deployer to make changes here
 ## change "test" to vocab name
 
-		; api:uriTemplate  "/anzsrc-seo/collection"
-		; api:exampleRequestPath  "/anzsrc-seo/collection"
+		; api:uriTemplate  "/anzsrc-2020-for/collection"
+		; api:exampleRequestPath  "/anzsrc-2020-for/collection"
 
 ## end of TODO:
 ##############################################################
@@ -360,8 +360,8 @@ svoc:conceptListEndpoint a api:ListEndpoint
 ## TODO: deployer to make changes here
 ## change "test" to vocab name
 
-		; api:uriTemplate  "/anzsrc-seo/concept"
-		; api:exampleRequestPath  "/anzsrc-seo/concept"
+		; api:uriTemplate  "/anzsrc-2020-for/concept"
+		; api:exampleRequestPath  "/anzsrc-2020-for/concept"
 
 ## end of TODO:
 ##############################################################
@@ -384,8 +384,8 @@ svoc:conceptLabelEndpoint a api:ListEndpoint
 ## change "test" to vocab name
 ## change value of anyLabel= to a label for a concept in this vocabulary
 
-		; api:uriTemplate  "/anzsrc-seo/concept?anylabel={text}"
-		; api:exampleRequestPath  "/anzsrc-seo/concept?anylabel=Cambrian"
+		; api:uriTemplate  "/anzsrc-2020-for/concept?anylabel={text}"
+		; api:exampleRequestPath  "/anzsrc-2020-for/concept?anylabel=Cambrian"
 
 ## end of TODO:
 ##############################################################
@@ -411,8 +411,8 @@ svoc:conceptLabelContainsEndpoint a api:ListEndpoint
 ## change "test" to vocab name
 ## change value of labelcontains= to a word in a label for a concept in this vocabulary
 
-		; api:uriTemplate  "/anzsrc-seo/concept?labelcontains={text}"
-		; api:exampleRequestPath  "/anzsrc-seo/concept?labelcontains=cambrian"
+		; api:uriTemplate  "/anzsrc-2020-for/concept?labelcontains={text}"
+		; api:exampleRequestPath  "/anzsrc-2020-for/concept?labelcontains=cambrian"
 
 ## end of TODO:
 ##############################################################
@@ -438,8 +438,8 @@ svoc:broaderThanURIEndpoint a api:ListEndpoint
 ## change "test" to vocab name
 ## change value of uri= to a uri for a concept in this vocabulary
 
-		; api:uriTemplate  "/anzsrc-seo/concept/broader?uri={baseConcept}"
-		; api:exampleRequestPath  "/anzsrc-seo/concept/broader?uri=http://resource.geosciml.org/classifier/ics/ischart/Cambrian"
+		; api:uriTemplate  "/anzsrc-2020-for/concept/broader?uri={baseConcept}"
+		; api:exampleRequestPath  "/anzsrc-2020-for/concept/broader?uri=http://resource.geosciml.org/classifier/ics/ischart/Cambrian"
 
 ## end of TODO:
 ##############################################################
@@ -460,8 +460,8 @@ svoc:narrowerThanURIEndpoint a api:ListEndpoint
 ## change "test" to vocab name
 ## change value of uri= to a uri for a concept in this vocabulary
 
-		; api:uriTemplate  "/anzsrc-seo/concept/narrower?uri={baseConcept}"
-		; api:exampleRequestPath  "/anzsrc-seo/concept/narrower?uri=http://resource.geosciml.org/classifier/ics/ischart/Cambrian"
+		; api:uriTemplate  "/anzsrc-2020-for/concept/narrower?uri={baseConcept}"
+		; api:exampleRequestPath  "/anzsrc-2020-for/concept/narrower?uri=http://resource.geosciml.org/classifier/ics/ischart/Cambrian"
 
 ## end of TODO:
 ##############################################################
@@ -482,8 +482,8 @@ svoc:broaderTransitiveThanURIEndpoint a api:ListEndpoint
 ## change "test" to vocab name
 ## change value of uri= to a uri for a concept in this vocabulary
 
-		; api:uriTemplate  "/anzsrc-seo/concept/broaderTransitive?uri={baseConcept}"
-		; api:exampleRequestPath  "/anzsrc-seo/concept/broaderTransitive?uri=http://resource.geosciml.org/classifier/ics/ischart/Cambrian"
+		; api:uriTemplate  "/anzsrc-2020-for/concept/broaderTransitive?uri={baseConcept}"
+		; api:exampleRequestPath  "/anzsrc-2020-for/concept/broaderTransitive?uri=http://resource.geosciml.org/classifier/ics/ischart/Cambrian"
 
 ## end of TODO:
 ##############################################################
@@ -504,8 +504,8 @@ svoc:narrowerTransitiveThanURIEndpoint a api:ListEndpoint
 ## change "test" to vocab name
 ## change value of uri= to a uri for a concept in this vocabulary
 
-		; api:uriTemplate  "/anzsrc-seo/concept/narrowerTransitive?uri={baseConcept}"
-		; api:exampleRequestPath  "/anzsrc-seo/concept/narrowerTransitive?uri=http://resource.geosciml.org/classifier/ics/ischart/Cambrian"
+		; api:uriTemplate  "/anzsrc-2020-for/concept/narrowerTransitive?uri={baseConcept}"
+		; api:exampleRequestPath  "/anzsrc-2020-for/concept/narrowerTransitive?uri=http://resource.geosciml.org/classifier/ics/ischart/Cambrian"
 
 ## end of TODO:
 ##############################################################
@@ -526,8 +526,8 @@ svoc:broaderLabelEndpoint a api:ListEndpoint
 ## change "test" to vocab name
 ## change value of anyLabel= to a label for a concept in this vocabulary
 
-		; api:uriTemplate  "/anzsrc-seo/concept/broader?anylabel={text}"
-		; api:exampleRequestPath  "/anzsrc-seo/concept/broader?anylabel=Cambrian"
+		; api:uriTemplate  "/anzsrc-2020-for/concept/broader?anylabel={text}"
+		; api:exampleRequestPath  "/anzsrc-2020-for/concept/broader?anylabel=Cambrian"
 
 ## end of TODO:
 ##############################################################
@@ -554,8 +554,8 @@ svoc:narrowerLabelEndpoint a api:ListEndpoint
 ## change "test" to vocab name
 ## change value of anyLabel= to a label for a concept in this vocabulary
 
-		; api:uriTemplate  "/anzsrc-seo/concept/narrower?anylabel={text}"
-		; api:exampleRequestPath  "/anzsrc-seo/concept/narrower?anylabel=Cambrian"
+		; api:uriTemplate  "/anzsrc-2020-for/concept/narrower?anylabel={text}"
+		; api:exampleRequestPath  "/anzsrc-2020-for/concept/narrower?anylabel=Cambrian"
 
 ## end of TODO:
 ##############################################################
@@ -582,8 +582,8 @@ svoc:broaderTransitiveLabelEndpoint a api:ListEndpoint
 ## change "test" to vocab name
 ## change value of anyLabel= to a label for a concept in this vocabulary
 
-		; api:uriTemplate  "/anzsrc-seo/concept/broaderTransitive?anylabel={text}"
-		; api:exampleRequestPath  "/anzsrc-seo/concept/broaderTransitive?anylabel=Cambrian"
+		; api:uriTemplate  "/anzsrc-2020-for/concept/broaderTransitive?anylabel={text}"
+		; api:exampleRequestPath  "/anzsrc-2020-for/concept/broaderTransitive?anylabel=Cambrian"
 
 ## end of TODO:
 ##############################################################
@@ -610,8 +610,8 @@ svoc:narrowerTransitiveLabelEndpoint a api:ListEndpoint
 ## change "test" to vocab name
 ## change value of anyLabel= to a label for a concept in this vocabulary
 
-		; api:uriTemplate  "/anzsrc-seo/concept/narrowerTransitive?anylabel={text}"
-		; api:exampleRequestPath  "/anzsrc-seo/concept/narrowerTransitive?anylabel=Cambrian"
+		; api:uriTemplate  "/anzsrc-2020-for/concept/narrowerTransitive?anylabel={text}"
+		; api:exampleRequestPath  "/anzsrc-2020-for/concept/narrowerTransitive?anylabel=Cambrian"
 
 ## end of TODO:
 ##############################################################
@@ -644,8 +644,8 @@ svoc:narrowerTransitiveLabelEndpoint a api:ListEndpoint
 # List all of the top concepts in the vocabulary.
 svoc:topConceptsEndpoint a api:ListEndpoint
                 ; rdfs:comment "List all concepts which are topConcepts of the vocabulary"
-                ; api:uriTemplate  "/anzsrc-seo/concept/topConcepts"
-                ; api:exampleRequestPath  "/anzsrc-seo/concept/topConcepts"
+                ; api:uriTemplate  "/anzsrc-2020-for/concept/topConcepts"
+                ; api:exampleRequestPath  "/anzsrc-2020-for/concept/topConcepts"
                 ; api:selector [
                                 api:where " ?item a skos:Concept . ?l skos:hasTopConcept ?item . "
                 ]
@@ -656,8 +656,8 @@ svoc:topConceptsEndpoint a api:ListEndpoint
 # List of top concepts for a specific conceptscheme.
 svoc:topConceptsByConceptSchemeEndpoint a api:ListEndpoint
                 ; rdfs:comment "List all concepts which are topConcepts of the vocabulary"
-                ; api:uriTemplate  "/anzsrc-seo/concept/topConcepts?scheme={scheme_uri}"
-                ; api:exampleRequestPath  "/anzsrc-seo/concept/topConcepts?scheme=http://resource.geosciml.org/classifier/ics/ischart/Cambrian"
+                ; api:uriTemplate  "/anzsrc-2020-for/concept/topConcepts?scheme={scheme_uri}"
+                ; api:exampleRequestPath  "/anzsrc-2020-for/concept/topConcepts?scheme=http://resource.geosciml.org/classifier/ics/ischart/Cambrian"
                 ; api:variable  [ api:name "scheme_uri"; api:type rdfs:Resource ]
                 ; api:selector [
                                 api:where " ?item a skos:Concept .  ?scheme_uri skos:hasTopConcept ?item . "
@@ -674,8 +674,8 @@ svoc:topConceptsByConceptSchemeEndpoint a api:ListEndpoint
 # (c) against the concept's IRI, case-insensitive, as long as the concep also has a skos:prefLabel.
 svoc:conceptByLabelNotationURIEndpoint a api:ListEndpoint
                  ; rdfs:comment "List concepts where an RDF label, or a SKOS label/notation, or the concept's own IRI contains this text, case-insensitive"
-                 ; api:uriTemplate  "/anzsrc-seo/concept?anycontains={text}"
-                 ; api:exampleRequestPath  "/anzsrc-seo/concept?anycontains=Cambrian"
+                 ; api:uriTemplate  "/anzsrc-2020-for/concept?anycontains={text}"
+                 ; api:exampleRequestPath  "/anzsrc-2020-for/concept?anycontains=Cambrian"
                  ; api:selector [
                                  api:where " ?item a skos:Concept .  ?item ?label ?l . FILTER (   ((?label = rdfs:label || ?label = skos:prefLabel || ?label = skos:altLabel ) && regex( str(?l) , ?text , 'i' )   )|| ((?label= skos:notation ) && str(?l) = ?text )   || ( regex( str(?item), ?text, 'i') && ( ?label = skos:prefLabel ))   ) " ## URI match, only when the URI has a prefLabel
                                 ]
@@ -686,8 +686,8 @@ svoc:conceptByLabelNotationURIEndpoint a api:ListEndpoint
 # List of concepts in the specified collection
 svoc:inCollectionURIEndpoint a api:ListEndpoint
                 ; rdfs:comment "List of concepts which are members of the collection identified by this URI"
-                ; api:uriTemplate  "/anzsrc-seo/concept/inCollection?uri={baseCollection}"
-                ; api:exampleRequestPath  "/anzsrc-seo/concept/inCollection?uri=http://resource.geosciml.org/classifier/ics/ischart/Cambrian"
+                ; api:uriTemplate  "/anzsrc-2020-for/concept/inCollection?uri={baseCollection}"
+                ; api:exampleRequestPath  "/anzsrc-2020-for/concept/inCollection?uri=http://resource.geosciml.org/classifier/ics/ischart/Cambrian"
                 ; api:variable  [ api:name "baseCollection"; api:type rdfs:Resource ]
                 ; api:selector [
                                 # counter-intuitively, skos:member property indicates the object is a member of the subject
@@ -701,9 +701,9 @@ svoc:inCollectionURIEndpoint a api:ListEndpoint
 ## Recursively list of all concepts that are broader than the one identified by this URI
 svoc:allBroaderThanURIEndpoint a api:ListEndpoint
                 ; rdfs:comment "Recursively list concepts broader than the one identified by this URI"
-                ; api:uriTemplate  "/anzsrc-seo/concept/allBroader?uri={baseConcept}"
-                ; api:exampleRequestPath  "/anzsrc-seo/concept/allBroader?uri=http://purl.org/au-research/vocabulary/anzsrc-seo/2008/810108"
-                                ; api:variable  [ api:name "baseConcept"; api:type rdfs:Resource ]
+                ; api:uriTemplate  "/anzsrc-2020-for/concept/allBroader?uri={baseConcept}"
+                ; api:exampleRequestPath  "/anzsrc-2020-for/concept/allBroader?uri=https://linked.data.gov.au/def/anzsrc-for/2020/300101"
+                ; api:variable  [ api:name "baseConcept"; api:type rdfs:Resource ]
                 ; api:selector [ # logically unintuitive, note order of subject, object
                                 api:where " ?item skos:narrower+ ?baseConcept  "
                 ]
@@ -715,8 +715,8 @@ svoc:allBroaderThanURIEndpoint a api:ListEndpoint
 # Recursively list of all concepts that are narrower than the one identified by this URI
 svoc:allNarrowerThanURIEndpoint a api:ListEndpoint
                 ; rdfs:comment "Recursively list concepts narrower than the one identified by this URI"
-                ; api:uriTemplate  "/anzsrc-seo/concept/allNarrower?uri={baseConcept}"
-                ; api:exampleRequestPath  "/anzsrc-seo/concept/allNarrower?uri=http://resource.geosciml.org/classifier/ics/ischart/Furongian"
+                ; api:uriTemplate  "/anzsrc-2020-for/concept/allNarrower?uri={baseConcept}"
+                ; api:exampleRequestPath  "/anzsrc-2020-for/concept/allNarrower?uri=http://resource.geosciml.org/classifier/ics/ischart/Furongian"
                 ; api:variable  [ api:name "baseConcept"; api:type rdfs:Resource ]
                 ; api:selector [ # logically unintuitive, note order of subject, object
                                 api:where " ?item skos:broader+ ?baseConcept "
