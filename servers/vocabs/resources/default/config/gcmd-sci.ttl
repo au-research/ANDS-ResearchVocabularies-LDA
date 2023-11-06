@@ -816,8 +816,9 @@ svoc:inCollectionURIEndpoint a api:ListEndpoint
                 ; api:viewer  api:basicViewer,svoc:basicConceptViewer
                 .
 
-# Special endpoint needed by RDA harvester!
-## Recursively list of all concepts that are broader than the one identified by this URI
+# Special endpoint needed by the RDA harvester for the enrichment process.
+# Provided as a courtesy for all other vocabularies.
+# Recursively list all concepts that are broader than the one identified by this URI
 svoc:allBroaderThanURIEndpoint a api:ListEndpoint
                 ; rdfs:comment "Recursively list concepts broader than the one identified by this URI"
                 ; api:uriTemplate  "/gcmd-sci/concept/allBroader?uri={baseConcept}"
@@ -830,8 +831,8 @@ svoc:allBroaderThanURIEndpoint a api:ListEndpoint
                 ; api:viewer  api:basicViewer,svoc:basicConceptViewer
                 .
 
-# Needed by vocab widget.
-# Recursively list of all concepts that are narrower than the one identified by this URI
+# Needed by the vocab widget.
+# Recursively list all concepts that are narrower than the one identified by this URI
 svoc:allNarrowerThanURIEndpoint a api:ListEndpoint
                 ; rdfs:comment "Recursively list concepts narrower than the one identified by this URI"
                 ; api:uriTemplate  "/gcmd-sci/concept/allNarrower?uri={baseConcept}"
