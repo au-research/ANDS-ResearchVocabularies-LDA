@@ -335,8 +335,8 @@ svoc:URIEndpoint a api:ItemEndpoint
 ## ARDC: Use api:select in order to be able to specify "DISTINCT".
 svoc:resourceLabelEndpoint a api:ListEndpoint
 		; rdfs:comment "List resources where a skos label property has exact match to text"
-		; api:uriTemplate  "${SVC_PREFIX}/resource?anylabel={text}"
-		; api:exampleRequestPath  "${SVC_PREFIX}/resource?anylabel=Cambrian"
+		; api:uriTemplate  "/gcmd-sci/resource?anylabel={text}"
+		; api:exampleRequestPath  "/gcmd-sci/resource?anylabel=Cambrian"
 		; api:selector [
 			api:select
 			   """PREFIX  skos: <http://www.w3.org/2004/02/skos/core#>
@@ -364,8 +364,8 @@ svoc:resourceLabelEndpoint a api:ListEndpoint
 # This was /concept?labelcontains={text}"; the latter now filters to SKOS concepts.
 svoc:resourceLabelContainsEndpoint a api:ListEndpoint
 		; rdfs:comment "List resources where a skos label property contains this text, case-insensitive"
-		; api:uriTemplate  "${SVC_PREFIX}/resource?labelcontains={text}"
-		; api:exampleRequestPath  "${SVC_PREFIX}/resource?labelcontains=cambrian"
+		; api:uriTemplate  "/gcmd-sci/resource?labelcontains={text}"
+		; api:exampleRequestPath  "/gcmd-sci/resource?labelcontains=cambrian"
 		; api:selector [
 			api:select
 			   """PREFIX  skos: <http://www.w3.org/2004/02/skos/core#>
