@@ -886,4 +886,266 @@
     </xsl:if>
   </xsl:template>
 
+  <!-- Patch 16 -->
+  <!-- CC-2390 RVADEV-8, and also a follow-on from Patch 15.
+       Cope with empty property and sort fields in URLs,
+       e.g., as you get using ...,,,,....
+  -->
+  <!-- Utility template to strip commas from the beginning and end,
+       and replace contiguous multiple commas with just one comma.
+       (NB in order to be correct, strip from the beginning and end
+       _after_ removing contiguous multiple commas!) -->
+  <xsl:template name="stripConsecutiveCommas">
+    <xsl:param name="param" />
+    <xsl:value-of select="replace(replace(replace($param, ',,+', ','), '^,', ''), ',$', '')" />
+  </xsl:template>
+
+  <xsl:template match="result" mode="viewnav">
+    <xsl:variable name="northing" select="key('propertyTerms', $northing-uri)/label" />
+    <xsl:variable name="easting" select="key('propertyTerms', $easting-uri)/label" />
+    <xsl:variable name="lat" select="key('propertyTerms', $lat-uri)/label" />
+    <xsl:variable name="long" select="key('propertyTerms', $long-uri)/label" />
+    <xsl:variable name="label" select="key('propertyTerms', $label-uri)/label" />
+    <xsl:variable name="prefLabel" select="key('propertyTerms', $prefLabel-uri)/label" />
+    <xsl:variable name="altLabel" select="key('propertyTerms', $altLabel-uri)/label" />
+    <xsl:variable name="name" select="key('propertyTerms', $name-uri)/label" />
+    <xsl:variable name="title" select="key('propertyTerms', $title-uri)/label" />
+    <xsl:variable name="view">
+      <xsl:call-template name="paramValue">
+	<xsl:with-param name="uri" select="@href" />
+	<xsl:with-param name="param" select="'_view'" />
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:variable name="properties">
+      <xsl:call-template name="stripConsecutiveCommas">
+	<xsl:with-param name="param">
+	  <xsl:call-template name="paramValue">
+	    <xsl:with-param name="uri" select="@href" />
+	    <xsl:with-param name="param" select="'_properties'" />
+	  </xsl:call-template>
+	</xsl:with-param>
+      </xsl:call-template>
+    </xsl:variable>
+    <section class="view">
+      <h1>View</h1>
+      <xsl:call-template name="createInfo">
+	<xsl:with-param name="text">
+	  <xsl:text>Choose what information you want to view about each item. </xsl:text>
+	  <xsl:text>There are some pre-defined views, but starred properties are always present no matter what the view. </xsl:text> 
+	  <xsl:text>You can star properties by clicking on the </xsl:text>
+	  <img src="{$inactiveImageBase}/Star.png" alt="star this property" />
+	  <xsl:text> icon. The currently starred icons have a </xsl:text>
+	  <img src="{$activeImageBase}/Star.png" alt="unstar this property" />
+	  <xsl:text> icon; clicking on it will unstar the property.</xsl:text>
+	</xsl:with-param>
+      </xsl:call-template>
+      <xsl:if test="$properties != ''">
+	<p class="reset">
+	  <a title="unstar all properties">
+	    <xsl:attribute name="href">
+	      <xsl:call-template name="substituteParam">
+		<xsl:with-param name="uri" select="/result/@href" />
+		<xsl:with-param name="param" select="'_properties'" />
+		<xsl:with-param name="value" select="''" />
+	      </xsl:call-template>
+	    </xsl:attribute>
+	    <img src="{$activeImageBase}/Back.png" alt="reset" />
+	  </a>
+	</p>
+      </xsl:if>
+      <ul>
+	<xsl:for-each select="hasVersion/item | version[not(item)]">
+	  <li>
+	    <xsl:apply-templates select="." mode="nav">
+	      <xsl:with-param name="current" select="$view" />
+	    </xsl:apply-templates>
+	  </li>
+	</xsl:for-each>
+      </ul>
+      <ul class="properties">
+	<xsl:if test="$properties != ''">
+	  <xsl:apply-templates select="." mode="selectedProperties">
+	    <xsl:with-param name="properties" select="$properties" />
+	  </xsl:apply-templates>
+	</xsl:if>
+	<xsl:for-each select="(items/item/* | primaryTopic[not(../items)]/*)[generate-id(key('properties', name(.))[1]) = generate-id(.)]">
+	  <xsl:sort select="name(.) = $prefLabel" order="descending" />
+	  <xsl:sort select="name(.) = $name" order="descending" />
+	  <xsl:sort select="name(.) = $title" order="descending" />
+	  <xsl:sort select="name(.) = $label" order="descending" />
+	  <xsl:sort select="name(.) = $altLabel" order="descending" />
+	  <xsl:sort select="name(.) = $easting" order="descending" />
+	  <xsl:sort select="name(.) = $northing" order="descending" />
+	  <xsl:sort select="name(.) = $lat" order="descending" />
+	  <xsl:sort select="name(.) = $long" order="descending" />
+	  <xsl:sort select="boolean(@datatype)" order="descending" />
+	  <xsl:sort select="@datatype" />
+	  <xsl:sort select="boolean(@href)" />
+	  <xsl:sort select="local-name()" />
+	  <xsl:apply-templates select="." mode="propertiesentry">
+	    <xsl:with-param name="properties" select="$properties" />
+	  </xsl:apply-templates>
+	</xsl:for-each>
+      </ul>
+    </section>
+  </xsl:template>
+
+  <xsl:template match="result" mode="sortnav">
+    <xsl:variable name="northing" select="key('propertyTerms', $northing-uri)/label" />
+    <xsl:variable name="easting" select="key('propertyTerms', $easting-uri)/label" />
+    <xsl:variable name="lat" select="key('propertyTerms', $lat-uri)/label" />
+    <xsl:variable name="long" select="key('propertyTerms', $long-uri)/label" />
+    <xsl:variable name="label" select="key('propertyTerms', $label-uri)/label" />
+    <xsl:variable name="prefLabel" select="key('propertyTerms', $prefLabel-uri)/label" />
+    <xsl:variable name="altLabel" select="key('propertyTerms', $altLabel-uri)/label" />
+    <xsl:variable name="name" select="key('propertyTerms', $name-uri)/label" />
+    <xsl:variable name="title" select="key('propertyTerms', $title-uri)/label" />
+    <xsl:variable name="searchURI">
+      <xsl:apply-templates select="/result" mode="searchURI" />
+    </xsl:variable>
+    <xsl:variable name="current">
+      <xsl:call-template name="stripConsecutiveCommas">
+	<xsl:with-param name="param">
+	  <xsl:call-template name="paramValue">
+	    <xsl:with-param name="uri" select="$searchURI" />
+	    <xsl:with-param name="param" select="'_sort'" />
+	  </xsl:call-template>
+	</xsl:with-param>
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:variable name="orderBy">
+      <xsl:call-template name="paramValue">
+	<xsl:with-param name="uri" select="$searchURI" />
+	<xsl:with-param name="param" select="'_orderBy'" />
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:variable name="baseURI">
+      <xsl:call-template name="substituteParam">
+	<xsl:with-param name="uri" select="$searchURI" />
+	<xsl:with-param name="param" select="'_orderBy'" />
+	<xsl:with-param name="value" select="''" />
+      </xsl:call-template>
+    </xsl:variable>
+    <section class="sort">
+      <h1>Sort by</h1>
+      <xsl:call-template name="createInfo">
+	<xsl:with-param name="text">
+	  <xsl:text>This list shows the properties that you can sort by. Click on </xsl:text>
+	  <img src="{$inactiveImageBase}/Arrow3_Up.png" alt="sort in ascending order" />
+	  <xsl:text> to sort in ascending order and </xsl:text>
+	  <img src="{$inactiveImageBase}/Arrow3_Down.png" alt="sort in descending order" />
+	  <xsl:text> to sort in descending order. The properties that you're currently sorting by are shown at the top of the list. Click on </xsl:text>
+	  <img src="{$activeImageBase}/Cancel.png" alt="remove this sort" />
+	  <xsl:text> to remove a sort and </xsl:text>
+	  <img src="{$activeImageBase}/Arrow3_Up.png" alt="sort in descending order" />
+	  <xsl:text> or </xsl:text>
+	  <img src="{$activeImageBase}/Arrow3_Down.png" alt="sort in ascending order" />
+	  <xsl:text> to reverse the current sort order. </xsl:text>
+	  <xsl:text>Click on the </xsl:text>
+	  <img src="{$activeImageBase}/Back.png" alt="remove all sorting" />
+	  <xsl:text> icon to remove all the sorting. </xsl:text>
+	  <xsl:text>Note that sorting can significantly slow down the loading of the page.</xsl:text>
+	</xsl:with-param>
+      </xsl:call-template>
+      <xsl:if test="$current != ''">
+	<p class="reset">
+	  <a title="remove sorting">
+	    <xsl:attribute name="href">
+	      <xsl:call-template name="substituteParam">
+		<xsl:with-param name="uri" select="$baseURI" />
+		<xsl:with-param name="param" select="'_sort'" />
+		<xsl:with-param name="value" select="''" />
+	      </xsl:call-template>
+	    </xsl:attribute>
+	    <img src="{$activeImageBase}/Back.png" alt="reset" />
+	  </a>
+	</p>
+      </xsl:if>
+      <ul>
+	<xsl:choose>
+	  <xsl:when test="$orderBy != ''">
+	    <xsl:variable name="description">
+	      <xsl:choose>
+		<xsl:when test="starts-with($orderBy, concat('(((?', $easting, ' - ')) or starts-with($orderBy, concat('desc(((?', $easting, ' - '))"> proximity to centre of map</xsl:when>
+		<xsl:otherwise> custom sort</xsl:otherwise>
+	      </xsl:choose>
+	    </xsl:variable>
+	    <li class="selected">
+	      <a rel="nofollow" title="remove this sort" href="{$baseURI}">
+		<img src="{$activeImageBase}/Cancel.png" alt="remove this sort" />
+	      </a>
+	      <xsl:choose>
+		<!-- this is the _orderBy that's used to sort by proximity to center of the map -->
+		<xsl:when test="starts-with($orderBy, 'desc')">
+		  <a rel="nofollow" title="sort in ascending order">
+		    <xsl:attribute name="href">
+		      <xsl:call-template name="substituteParam">
+			<xsl:with-param name="uri" select="$baseURI" />
+			<xsl:with-param name="param" select="'_orderBy'" />
+			<xsl:with-param name="value" select="substring-after($orderBy, 'desc')" />
+		      </xsl:call-template>
+		    </xsl:attribute>
+		    <img src="{$activeImageBase}/Arrow3_Down.png" alt="sort in ascending order" />
+		  </a>
+		  <xsl:value-of select="$description" />
+		</xsl:when>
+		<xsl:when test="starts-with($orderBy, 'asc')">
+		  <a rel="nofollow" title="sort in descending order">
+		    <xsl:attribute name="href">
+		      <xsl:call-template name="substituteParam">
+			<xsl:with-param name="uri" select="$baseURI" />
+			<xsl:with-param name="param" select="'_orderBy'" />
+			<xsl:with-param name="value" select="concat('desc', substring-after($orderBy, 'asc'))" />
+		      </xsl:call-template>
+		    </xsl:attribute>
+		    <img src="{$activeImageBase}/Arrow3_Up.png" alt="sort in descending order" />
+		  </a>
+		  <xsl:value-of select="$description" />
+		</xsl:when>
+		<xsl:otherwise>
+		  <a rel="nofollow" title="sort in descending order">
+		    <xsl:attribute name="href">
+		      <xsl:call-template name="substituteParam">
+			<xsl:with-param name="uri" select="$baseURI" />
+			<xsl:with-param name="param" select="'_orderBy'" />
+			<xsl:with-param name="value" select="concat('desc', $orderBy)" />
+		      </xsl:call-template>
+		    </xsl:attribute>
+		    <img src="{$activeImageBase}/Arrow3_Up.png" alt="sort in descending order" />
+		  </a>
+		  <xsl:value-of select="$description" />
+		</xsl:otherwise>
+	      </xsl:choose>
+	    </li>
+	  </xsl:when>
+	  <xsl:when test="$current != ''">
+	    <xsl:apply-templates select="." mode="selectedSorts">
+	      <xsl:with-param name="uri" select="$baseURI" />
+	      <xsl:with-param name="sorts" select="$current" />
+	    </xsl:apply-templates>
+	  </xsl:when>
+	</xsl:choose>
+	<xsl:for-each select="items/item/*[generate-id(key('properties', name(.))[1]) = generate-id(.)]">
+	  <xsl:sort select="name(.) = $prefLabel" order="descending" />
+	  <xsl:sort select="name(.) = $name" order="descending" />
+	  <xsl:sort select="name(.) = $title" order="descending" />
+	  <xsl:sort select="name(.) = $label" order="descending" />
+	  <xsl:sort select="name(.) = $altLabel" order="descending" />
+	  <xsl:sort select="name(.) = $easting" order="descending" />
+	  <xsl:sort select="name(.) = $northing" order="descending" />
+	  <xsl:sort select="name(.) = $lat" order="descending" />
+	  <xsl:sort select="name(.) = $long" order="descending" />
+	  <xsl:sort select="boolean(@datatype)" order="descending" />
+	  <xsl:sort select="@datatype" />
+	  <xsl:sort select="boolean(@href)" />
+	  <xsl:sort select="local-name()" />
+	  <xsl:apply-templates select="." mode="sortentry">
+	    <xsl:with-param name="uri" select="$baseURI" />
+	    <xsl:with-param name="current" select="$current" />
+	  </xsl:apply-templates>
+	</xsl:for-each>
+      </ul>
+    </section>
+  </xsl:template>
+
 </xsl:stylesheet>
