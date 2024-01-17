@@ -1,0 +1,116 @@
+--- ./elda-lda/src/main/java/com/epimorphics/lda/core/EndpointMetadata.java-o	2021-09-22 00:12:09.000000000 +1000
++++ ./elda-lda/src/main/java/com/epimorphics/lda/core/EndpointMetadata.java	2024-01-16 15:52:37.407510677 +1100
+@@ -10,20 +10,21 @@
+ import java.util.*;
+ 
+ import com.epimorphics.lda.bindings.Bindings;
+ import com.epimorphics.lda.core.APIResultSet.MergedModels;
+ import com.epimorphics.lda.metadata.MetaConfig;
+ import com.epimorphics.lda.core.property.ViewProperty;
+ import com.epimorphics.lda.query.QueryParameter;
+ import com.epimorphics.lda.query.WantsMetadata;
+ import com.epimorphics.lda.renderers.Factories.FormatNameAndType;
+ import com.epimorphics.lda.shortnames.CompleteContext;
++import com.epimorphics.lda.shortnames.ShortnameService;
+ import com.epimorphics.lda.sources.Source;
+ import com.epimorphics.lda.specs.APIEndpointSpec;
+ import com.epimorphics.lda.specs.EndpointDetails;
+ import com.epimorphics.lda.support.PropertyChain;
+ import com.epimorphics.lda.vocabularies.*;
+ import com.epimorphics.util.URIUtils;
+ import com.hp.hpl.jena.graph.compose.MultiUnion;
+ import com.hp.hpl.jena.rdf.model.*;
+ import com.hp.hpl.jena.sparql.vocabulary.FOAF;
+ import com.hp.hpl.jena.util.ResourceUtils;
+@@ -33,32 +34,44 @@
+     Class to handle the construction of metadata for API endpoint results.
+     Bit of a hotchpotch at the moment.
+     
+     @author Chris    
+ */
+ public class EndpointMetadata {
+ 
+ 	protected final Bindings bindings;
+ 	protected final Resource thisPage;
+ 	protected final URI thisPageAsURI;
++	protected final ShortnameService sns;
+ 	
+ 	protected final String pageNumber;
+ 	protected final boolean isListEndpoint;
+ 	protected final boolean isParameterBasedFormat;
+ 	
+ 	public EndpointMetadata( EndpointDetails ep, Resource thisPage, String pageNumber, Bindings bindings ) {
+ 		this.bindings = bindings;
+ 		this.thisPage = thisPage;
+ 		this.pageNumber = pageNumber;
+ 		this.isListEndpoint = ep.isListEndpoint();
+ 		this.isParameterBasedFormat = ep.hasParameterBasedContentNegotiation();
+     	this.thisPageAsURI = URIUtils.newURI( thisPage.getURI() );
++	this.sns = null;
++	}
++
++	public EndpointMetadata( EndpointDetails ep, Resource thisPage, String pageNumber, Bindings bindings, ShortnameService sns ) {
++		this.bindings = bindings;
++		this.thisPage = thisPage;
++		this.pageNumber = pageNumber;
++		this.isListEndpoint = ep.isListEndpoint();
++		this.isParameterBasedFormat = ep.hasParameterBasedContentNegotiation();
++    	this.thisPageAsURI = URIUtils.newURI( thisPage.getURI() );
++	this.sns = sns;
+ 	}
+ 	
+ 	public static void addAllMetadata
+ 		( APIEndpointSpec spec
+ 		, MergedModels mergedModels
+ 		, URI fullURI
+ 		, Resource uriForDefinition
+ 		, Bindings bindings
+ 		, CompleteContext cc
+ 		, boolean suppress_IPTO
+@@ -133,21 +146,21 @@
+ 	    		.addProperty( API.definition, uriForDefinition ) 
+ 	    		.addProperty( RDF.type, API.ListEndpoint )
+ 	    		;
+ 	    } else {
+ 			Resource content = firstOf(resultList).inModel(metaModel);
+ 			thisMetaPage.addProperty( FOAF.primaryTopic, content );
+ 			thisMetaPage.addProperty( RDF.type, API.ItemEndpoint );
+ 			if (suppress_IPTO == false) content.addProperty( FOAF.isPrimaryTopicOf, thisMetaPage );
+ 		}
+ 	//
+-		EndpointMetadata em = new EndpointMetadata( details, thisMetaPage, "" + page, bindings);
++		EndpointMetadata em = new EndpointMetadata( details, thisMetaPage, "" + page, bindings, spec.getAPISpec().getShortnameService() );
+ 		Model metaModel1 = mergedModels.getMetaModel();
+ 		Model mergedModels1 = mergedModels.getMergedModel();
+ 	//
+ 		Resource exec = metaModel1.createResource();
+ 		Model versionsModel = ModelFactory.createDefaultModel();
+ 		Model formatsModel = ModelFactory.createDefaultModel();
+ 		Model bindingsModel = ModelFactory.createDefaultModel();
+ 		Model execution = ModelFactory.createDefaultModel();
+ 	//	
+ 		em.addVersions( versionsModel, cc, views );
+@@ -311,20 +324,23 @@
+ 		List<String> uriList = new ArrayList<String>( termBindings.keySet() );
+ 		Collections.sort( uriList );
+ 		for (String uri: uriList) {
+ 			Resource term = meta.createResource( uri );
+ 			if (toScan.containsResource( term )) {
+ 				String shorty = termBindings.get( uri );
+ 	    		Resource tb = createBNode( meta );
+ 	    		exec.addProperty( API.termBinding, tb ); 
+ 				tb.addProperty( API.label, shorty );
+ 				tb.addProperty( API.property, term );
++				if ( sns != null && sns.expand(shorty) != null ) {
++					tb.addProperty( API.definition, "true" );
++				}
+ 			}
+ 		}
+ 	}
+ 
+ 	// following the Puelia model.
+ 	public void addExecution( Model meta, Resource anExec ) {
+ 		Resource exec = anExec.inModel(meta), page = thisPage.inModel(meta);
+ 		exec.addProperty( RDF.type, API.Execution );
+ 		Resource P = createBNode( meta );
+ 		ELDA.addEldaMetadata( P );
