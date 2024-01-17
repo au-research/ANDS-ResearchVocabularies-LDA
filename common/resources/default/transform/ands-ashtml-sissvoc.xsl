@@ -246,6 +246,8 @@
        See CC-2089 for a proposed change (to do with specifying the
        vocabulary's languages in its spec file), which, if
        implemented, would allow restoration of these search links.
+
+       See also Patch 17 for the definition of checkPropertyShortnames.
   -->
   <xsl:template match="*" mode="filter">
     <xsl:param name="paramName">
@@ -268,6 +270,11 @@
 	  <xsl:apply-templates select="/result" mode="searchURI" />
 	</xsl:with-param>
 	<xsl:with-param name="param" select="$paramName" />
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:variable name="shortnamesOK">
+      <xsl:call-template name="checkPropertyShortnames">
+	<xsl:with-param name="paramName" select="$paramName" />
       </xsl:call-template>
     </xsl:variable>
     <xsl:choose>
@@ -328,28 +335,30 @@
 	    </a>
 	  </xsl:when>
 	  <xsl:otherwise>
-	    <a rel="nofollow" title="filter to values equal to or less than {$value}">
-	      <xsl:attribute name="href">
-		<xsl:call-template name="substituteParam">
-		  <xsl:with-param name="uri">
-		    <xsl:apply-templates select="/result" mode="searchURI" />
-		  </xsl:with-param>
-		  <xsl:with-param name="param" select="concat('max-',
-                                                       $paramName)" />
-		  <xsl:with-param name="value" select="$value" />
-		</xsl:call-template>
-	      </xsl:attribute>
-	      <xsl:choose>
-		<xsl:when test="$max != ''">
-		  <img src="{$activeImageBase}/Arrow3_Left.png"
-                       alt="equal to or less than {$value}" />
-		</xsl:when>
-		<xsl:otherwise>
-		  <img src="{$inactiveImageBase}/Arrow3_Left.png"
-                       alt="equal to or less than {$value}" />
-		</xsl:otherwise>
-	      </xsl:choose>
-	    </a>
+	    <xsl:if test="not(contains($shortnamesOK,'false'))">
+	      <a rel="nofollow" title="filter to values equal to or less than {$value}">
+		<xsl:attribute name="href">
+		  <xsl:call-template name="substituteParam">
+		    <xsl:with-param name="uri">
+		      <xsl:apply-templates select="/result" mode="searchURI" />
+		    </xsl:with-param>
+		    <xsl:with-param name="param" select="concat('max-',
+							 $paramName)" />
+		    <xsl:with-param name="value" select="$value" />
+		  </xsl:call-template>
+		</xsl:attribute>
+		<xsl:choose>
+		  <xsl:when test="$max != ''">
+		    <img src="{$activeImageBase}/Arrow3_Left.png"
+			 alt="equal to or less than {$value}" />
+		  </xsl:when>
+		  <xsl:otherwise>
+		    <img src="{$inactiveImageBase}/Arrow3_Left.png"
+			 alt="equal to or less than {$value}" />
+		  </xsl:otherwise>
+		</xsl:choose>
+	      </a>
+	    </xsl:if>
 	  </xsl:otherwise>
 	</xsl:choose>
 	<xsl:choose>
@@ -371,29 +380,31 @@
 	    </a>
 	  </xsl:when>
 	  <xsl:otherwise>
-	    <a rel="nofollow" title="filter to values equal to or more than {$value}">
-	      <xsl:attribute name="href">
-		<xsl:call-template name="substituteParam">
-		  <xsl:with-param name="uri">
-		    <xsl:apply-templates select="/result"
-                                         mode="searchURI" />
-		  </xsl:with-param>
-		  <xsl:with-param name="param" select="concat('min-',
-                                                       $paramName)" />
-		  <xsl:with-param name="value" select="$value" />
-		</xsl:call-template>
-	      </xsl:attribute>
-	      <xsl:choose>
-		<xsl:when test="$min != ''">
-		  <img src="{$activeImageBase}/Arrow3_Right.png"
-                       alt="equal to or more than {$value}" />
-		</xsl:when>
-		<xsl:otherwise>
-		  <img src="{$inactiveImageBase}/Arrow3_Right.png"
-                       alt="equal to or more than {$value}" />
-		</xsl:otherwise>
-	      </xsl:choose>
-	    </a>
+	    <xsl:if test="not(contains($shortnamesOK,'false'))">
+	      <a rel="nofollow" title="filter to values equal to or more than {$value}">
+		<xsl:attribute name="href">
+		  <xsl:call-template name="substituteParam">
+		    <xsl:with-param name="uri">
+		      <xsl:apply-templates select="/result"
+					   mode="searchURI" />
+		    </xsl:with-param>
+		    <xsl:with-param name="param" select="concat('min-',
+							 $paramName)" />
+		    <xsl:with-param name="value" select="$value" />
+		  </xsl:call-template>
+		</xsl:attribute>
+		<xsl:choose>
+		  <xsl:when test="$min != ''">
+		    <img src="{$activeImageBase}/Arrow3_Right.png"
+			 alt="equal to or more than {$value}" />
+		  </xsl:when>
+		  <xsl:otherwise>
+		    <img src="{$inactiveImageBase}/Arrow3_Right.png"
+			 alt="equal to or more than {$value}" />
+		  </xsl:otherwise>
+		</xsl:choose>
+	      </a>
+	    </xsl:if>
 	  </xsl:otherwise>
 	</xsl:choose>
       </xsl:when>
@@ -1146,6 +1157,147 @@
 	</xsl:for-each>
       </ul>
     </section>
+  </xsl:template>
+
+  <!-- Patch 17 -->
+  <!-- CC-2390 RVADEV-10
+       Don't offer links for properties to view,
+       sort, or filter on where the property isn't a valid shortname.
+
+       See also Patch 5, in which checkPropertyShortnames is now also
+       used.
+  -->
+  <!-- Test a property chain to make sure all its components are valid
+       shortnames.  The chain is broken up at its dot separators;
+       initial hyphens are discarded.
+  -->
+  <xsl:template name="checkPropertyShortnames">
+    <xsl:param name="paramName" />
+    <xsl:choose>
+      <xsl:when test="$paramName = ''">
+      </xsl:when>
+      <xsl:when test="contains($paramName, '-')">
+	<xsl:call-template name="checkPropertyShortnames">
+	  <xsl:with-param name="paramName">
+	    <xsl:value-of select="substring-before($paramName, '-')" />
+	  </xsl:with-param>
+	</xsl:call-template>
+	<xsl:call-template name="checkPropertyShortnames">
+	  <xsl:with-param name="paramName" select="substring-after($paramName, '-')" />
+	</xsl:call-template>
+      </xsl:when>
+      <xsl:when test="contains($paramName, '.')">
+	<xsl:call-template name="checkPropertyShortnames">
+	  <xsl:with-param name="paramName" select="substring-before($paramName, '.')" />
+	</xsl:call-template>
+	<xsl:call-template name="checkPropertyShortnames">
+	  <xsl:with-param name="paramName" select="substring-after($paramName, '.')" />
+	</xsl:call-template>
+      </xsl:when>
+      <xsl:otherwise>
+	<!-- Here is the test of a bare shortname. The test outputs "false" if
+	     the shortname is not valid, and nothing at all, if it is valid.
+	     We consider the shortname to be valid if the termBinding has
+	     api_definition = "true". NB: requires our custom Elda LDA JAR!
+	-->
+	<xsl:if test="not(key('terms', $paramName)/api_definition = 'true')">
+	  false
+	</xsl:if>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  <xsl:template match="*" mode="properties">
+    <xsl:param name="properties" />
+    <xsl:variable name="name">
+      <xsl:apply-templates select="." mode="paramName" />
+    </xsl:variable>
+    <xsl:if test="not(contains(concat(',', $properties, ','), concat(',', $name, ',')))">
+      <xsl:variable name="shortnamesOK">
+	<xsl:call-template name="checkPropertyShortnames">
+	  <xsl:with-param name="paramName" select="$name" />
+	</xsl:call-template>
+      </xsl:variable>
+      <xsl:if test="not(contains($shortnamesOK,'false'))">
+	<!-- <xsl:if test="true()"> -->
+	<li>
+	  <a rel="nofollow" title="always include this property">
+	    <xsl:attribute name="href">
+	      <xsl:call-template name="substituteParam">
+		<xsl:with-param name="uri" select="/result/@href" />
+		<xsl:with-param name="param" select="'_properties'" />
+		<xsl:with-param name="value">
+		  <xsl:if test="$properties != ''">
+		    <xsl:value-of select="$properties" />
+		    <xsl:text>,</xsl:text>
+		  </xsl:if>
+		  <xsl:value-of select="$name" />
+		</xsl:with-param>
+	      </xsl:call-template>
+	    </xsl:attribute>
+	    <img src="{$inactiveImageBase}/Star.png" alt="star this property" />
+	    <xsl:text> </xsl:text>
+	    <xsl:apply-templates select="." mode="contextLabel" />
+	  </a>
+	</li>
+      </xsl:if>
+    </xsl:if>
+  </xsl:template>
+
+  <xsl:template match="*" mode="sort">
+    <xsl:param name="uri" />
+    <xsl:param name="current" />
+    <xsl:variable name="name">
+      <xsl:apply-templates select="." mode="paramName" />
+    </xsl:variable>
+    <xsl:variable name="shortnamesOK">
+      <xsl:call-template name="checkPropertyShortnames">
+	<xsl:with-param name="paramName" select="$name" />
+      </xsl:call-template>
+    </xsl:variable>
+    <xsl:if test="not(contains($shortnamesOK,'false'))">
+      <xsl:if test="not(contains(concat(',', $current, ','), concat(',', $name, ',')) or contains(concat(',', $current, ','), concat(',-', $name, ',')))">
+	<xsl:variable name="ascending">
+	  <xsl:call-template name="substituteParam">
+	    <xsl:with-param name="uri" select="$uri" />
+	    <xsl:with-param name="param" select="'_sort'" />
+	    <xsl:with-param name="value">
+	      <xsl:if test="$current != ''">
+		<xsl:value-of select="$current" />
+		<xsl:text>,</xsl:text>
+	      </xsl:if>
+	      <xsl:value-of select="$name" />
+	    </xsl:with-param>
+	  </xsl:call-template>
+	</xsl:variable>
+	<li>
+	  <a rel="nofollow" href="{$ascending}" title="sort in ascending order">
+	    <img src="{$inactiveImageBase}/Arrow3_Up.png" alt="sort in ascending order" />
+	  </a>
+	  <a rel="nofollow" title="sort in descending order">
+	    <xsl:attribute name="href">
+	      <xsl:call-template name="substituteParam">
+		<xsl:with-param name="uri" select="$uri" />
+		<xsl:with-param name="param" select="'_sort'" />
+		<xsl:with-param name="value">
+		  <xsl:if test="$current != ''">
+		    <xsl:value-of select="$current" />
+		    <xsl:text>,</xsl:text>
+		  </xsl:if>
+		  <xsl:text>-</xsl:text>
+		  <xsl:value-of select="$name" />
+		</xsl:with-param>
+	      </xsl:call-template>
+	    </xsl:attribute>
+	    <img src="{$inactiveImageBase}/Arrow3_Down.png" alt="sort in descending order" />
+	  </a>
+	  <xsl:text> </xsl:text>
+	  <a rel="nofollow" href="{$ascending}" title="sort in ascending order">
+	    <xsl:apply-templates select="." mode="contextLabel" />
+	  </a>
+	</li>
+      </xsl:if>
+    </xsl:if>
   </xsl:template>
 
 </xsl:stylesheet>
